@@ -288,10 +288,11 @@
       <div class="field">
         <label>AI Model (AI මොඩල් එක)</label>
         <select id="model">
-          <option value="anthropic/claude-3-5-haiku">Claude 3.5 Haiku (fast + good)</option>
-          <option value="anthropic/claude-3-5-sonnet">Claude 3.5 Sonnet (best quality)</option>
-          <option value="google/gemini-flash-1.5">Gemini Flash 1.5 (fastest)</option>
-          <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
+          <option value="openai/gpt-4o-mini">GPT-4o Mini (Best for Sinhala)</option>
+          <option value="google/gemini-1.5-flash">Gemini 1.5 Flash (Fastest)</option>
+          <option value="anthropic/claude-3-haiku">Claude 3 Haiku (Good)</option>
+          <option value="meta-llama/llama-3.1-70b-instruct">Llama 3.1 70B (Free/Cheap)</option>
+          <option value="openai/gpt-4o">GPT-4o (Highest Quality)</option>
         </select>
       </div>
       <div class="field">
@@ -339,7 +340,7 @@
 const WATERMARK_TEXT = 'dgsubz.netlify.app sinhala subtitles download';
 const ASS_WM = '{\\r\\fs16\\c&H808080&}' + WATERMARK_TEXT;
 const SRT_WM = '{\\fs14\\c&H808080&}' + WATERMARK_TEXT;
-const CHUNK_SIZE = 20; // Token limits වීම වැළැක්වීමට 20ට පහත හෙලන ලදී
+const CHUNK_SIZE = 20; 
 
 const SYSTEM_PROMPT = `You are "DG Subtitles Translate", an elite English-to-Sinhala subtitle translator.
 
@@ -355,10 +356,7 @@ CRITICAL RULES:
 7. If a line is a sound/scream/name, translate appropriately (e.g. "Ahh!" → "අහ්!").
 8. Keep subtitle lines SHORT and readable (they must fit on screen).`;
 
-const state = {
-  files: [],          
-  translating: false,
-};
+const state = { files: [], translating: false };
 
 const $ = (id) => document.getElementById(id);
 const uploadZone = $('uploadZone');
@@ -405,10 +403,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 saveKeyBtn.addEventListener('click', () => {
   const key = apiKeyInput.value.trim();
-  if (!key) {
-    toast('Please enter an API key', 'error');
-    return;
-  }
+  if (!key) { toast('Please enter an API key', 'error'); return; }
   localStorage.setItem('openrouter_api_key', key);
   toast('✅ API Key saved securely!', 'success');
   apiToggle.textContent = '⚙️ API Settings (Key Saved)';
@@ -434,48 +429,34 @@ function getFontName() {
 
 async function handleFiles(fileList) {
   if (!fileList || fileList.length === 0) return;
-  
   const filesArray = Array.from(fileList);
   let acceptedCount = 0;
 
   for (const f of filesArray) {
     const ext = f.name.split('.').pop().toLowerCase();
-    
     if (ext === 'zip') {
       toast('Extracting ZIP... Please wait ⏳', 'info');
       try {
         const zip = await JSZip.loadAsync(f);
         const zipFiles = Object.values(zip.files);
-        
         for (const zipFile of zipFiles) {
           if (!zipFile.dir && /\.(srt|ass|ssa)$/i.test(zipFile.name)) {
-            if (state.files.length + acceptedCount >= 15) {
-              toast('Maximum 15 files limit reached.', 'error');
-              break;
-            }
+            if (state.files.length + acceptedCount >= 15) { toast('Maximum 15 files limit reached.', 'error'); break; }
             const content = await zipFile.async('text');
             const fileExt = zipFile.name.split('.').pop().toLowerCase();
-            
             state.files.push({
               id: 'file_' + Date.now() + '_' + Math.floor(Math.random() * 10000),
-              name: zipFile.name.split('/').pop(),
-              ext: fileExt,
-              original: content,
+              name: zipFile.name.split('/').pop(), ext: fileExt, original: content,
               parsed: null, output: null, status: 'pending', progress: 0, error: null,
             });
             acceptedCount++;
           }
         }
         toast(`✅ ZIP Extracted. ${acceptedCount} files found.`, 'success');
-      } catch (err) {
-        toast('Error reading ZIP file: ' + f.name, 'error');
-      }
+      } catch (err) { toast('Error reading ZIP file: ' + f.name, 'error'); }
     } 
     else if (['srt', 'ass', 'ssa'].includes(ext)) {
-      if (state.files.length + acceptedCount >= 15) {
-        toast('Maximum 15 files allowed', 'error');
-        break;
-      }
+      if (state.files.length + acceptedCount >= 15) { toast('Maximum 15 files allowed', 'error'); break; }
       const content = await f.text();
       state.files.push({
         id: 'file_' + Date.now() + '_' + Math.floor(Math.random() * 10000),
@@ -501,26 +482,17 @@ function renderFiles() {
     const item = document.createElement('div');
     item.className = 'file-item ' + (f.status === 'done' ? 'done' : f.status === 'error' ? 'error' : '');
     item.dataset.id = f.id;
-
-    const lineInfo = f.parsed
-      ? (f.ext === 'srt' ? `${f.parsed.blocks.length} blocks` : `${f.parsed.dialogues.length} lines`)
-      : '—';
-
+    const lineInfo = f.parsed ? (f.ext === 'srt' ? `${f.parsed.blocks.length} blocks` : `${f.parsed.dialogues.length} lines`) : '—';
     item.innerHTML = `
       <div class="file-icon">${f.ext.toUpperCase()}</div>
       <div class="file-info">
         <div class="file-name">${escapeHTML(f.name)}</div>
-        <div class="file-meta">
-          <span>${lineInfo}</span>
-          <span>${statusLabel(f.status)}</span>
-        </div>
+        <div class="file-meta"><span>${lineInfo}</span><span>${statusLabel(f.status)}</span></div>
         <div class="progress-bar"><div class="progress-fill" style="width:${f.progress}%"></div></div>
         ${f.status === 'error' ? `<span class="error-text">${escapeHTML(f.error)}</span>` : ''}
       </div>
       <div class="file-actions">
-        ${f.status === 'done'
-          ? `<button class="btn-icon success" data-action="download" title="Download"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>`
-          : ''}
+        ${f.status === 'done' ? `<button class="btn-icon success" data-action="download" title="Download"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>` : ''}
         <button class="btn-icon danger" data-action="remove" title="Remove"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg></button>
       </div>
     `;
@@ -535,9 +507,7 @@ function renderFiles() {
     : `<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg> Translate All (පරිවර්තනය කරන්න)`;
 }
 
-function statusLabel(s) {
-  return { pending: 'Ready', parsing: 'Parsing…', translating: 'Translating…', done: '✅ Done', error: '❌ Error' }[s] || s;
-}
+function statusLabel(s) { return { pending: 'Ready', parsing: 'Parsing…', translating: 'Translating…', done: '✅ Done', error: '❌ Error' }[s] || s; }
 function escapeHTML(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
 filesList.addEventListener('click', (e) => {
@@ -638,11 +608,7 @@ async function translateAll(texts, opts, onProgress) {
           if (attempt < 3) await new Promise(r => setTimeout(r, 1000 * attempt));
         }
       }
-      
-      // දැන් අවුලක් ආවොත් සයිලන්ට් වෙන්නේ නැතුව Error එක උඩට යවනවා
-      if (!success) {
-        throw new Error(lastError.message || 'Translation failed after 3 attempts');
-      }
+      if (!success) throw new Error(lastError.message || 'Translation failed after 3 attempts');
     }
   }
 
@@ -687,14 +653,12 @@ ${JSON.stringify(items)}`
     let errMsg = `API Error ${res.status}`;
     try {
         const parsedErr = JSON.parse(t);
-        if (parsedErr.error && parsedErr.error.message) {
-            errMsg = parsedErr.error.message;
-        }
+        if (parsedErr.error && parsedErr.error.message) errMsg = parsedErr.error.message;
     } catch(_) { errMsg = t.slice(0, 100); }
     
-    // අපිට තේරෙන විදිහට Error එක හදමු
     if (errMsg.includes('credits')) errMsg = 'API Credits ඉවරයි! කරුණාකර OpenRouter එකට ගිහින් credits මිලදී ගන්න.';
     if (errMsg.includes('invalid api key')) errMsg = 'API Key එක වැරදියි! කරුණාකර ආයේ චෙක් කරන්න.';
+    if (errMsg.includes('not a valid model ID')) errMsg = 'තෝරාගත් AI මොඩල් එක OpenRouter එකේ නෑ. කරුණාකර වෙන මොඩල් එකක් තෝරන්න.';
     
     throw new Error(errMsg);
   }
@@ -789,7 +753,6 @@ async function translateFile(file, opts) {
 
     meta.forEach((m, k) => {
       const restored = restoreText(translated[k], m.tags);
-      // ASS එකේ ෆොන්ට් එක වෙනස් කරන්න කෙලින්ම ලයින් එකට ටැග් එක දානවා
       const fontTag = `{\\fn${font}\\fs${size}}`;
       ass.dialogues[m.dIdx].text = fontTag + restored;
     });
@@ -899,14 +862,9 @@ function downloadFile(file) {
 downloadAllBtn.addEventListener('click', async () => {
   const doneFiles = state.files.filter(f => f.status === 'done');
   if (!doneFiles.length) return;
-
-  if (doneFiles.length === 1) {
-    downloadFile(doneFiles[0]);
-    return;
-  }
+  if (doneFiles.length === 1) { downloadFile(doneFiles[0]); return; }
 
   toast(`Packaging ${doneFiles.length} files into ZIP...`, 'info');
-  
   try {
     const zip = new JSZip();
     doneFiles.forEach(f => {
@@ -914,14 +872,10 @@ downloadAllBtn.addEventListener('click', async () => {
       const suffix = f.ext === 'srt' ? '.si.srt' : '.si.ass';
       zip.file(baseName + suffix, f.output);
     });
-
     const content = await zip.generateAsync({ type: "blob" });
     saveAs(content, "DG_Translated_Subtitles.zip");
     toast('✅ ZIP Download Started!', 'success');
-  } catch (err) {
-    console.error("ZIP Create Error:", err);
-    toast('Error creating ZIP file', 'error');
-  }
+  } catch (err) { toast('Error creating ZIP file', 'error'); }
 });
 
 renderFiles();
