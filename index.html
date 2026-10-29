@@ -1,1 +1,975 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DG Subtitles Translate — English → Sinhala</title>
+<style>
+  :root{
+    --bg:#070a12; --bg2:#0d1220; --panel:#111827; --panel2:#1a2332;
+    --border:#1f2937; --border2:#2d3a4f;
+    --text:#e5e7eb; --muted:#94a3b8;
+    --accent:#8b5cf6; --accent2:#6366f1; --accent3:#a78bfa;
+    --green:#10b981; --red:#ef4444; --yellow:#f59e0b;
+    --shadow:0 20px 50px -20px rgba(139,92,246,.45);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans Sinhala',Roboto,sans-serif;
+    background:var(--bg); color:var(--text); min-height:100vh;
+    background-image:
+      radial-gradient(1200px 600px at 10% -10%, rgba(139,92,246,.18), transparent 60%),
+      radial-gradient(1000px 600px at 110% 110%, rgba(99,102,241,.15), transparent 60%),
+      radial-gradient(800px 400px at 50% 50%, rgba(167,139,250,.06), transparent 60%);
+    background-attachment:fixed;
+    padding-bottom:60px;
+  }
+  .container{max-width:1100px;margin:0 auto;padding:32px 20px}
+  header{text-align:center;margin-bottom:32px}
+  .logo{
+    display:inline-flex;align-items:center;gap:14px;
+    padding:10px 22px;border-radius:50px;
+    background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(99,102,241,.1));
+    border:1px solid rgba(139,92,246,.3);
+    margin-bottom:18px;
+  }
+  .logo-icon{
+    width:38px;height:38px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:18px;color:#fff;
+    box-shadow:0 8px 20px -8px var(--accent);
+  }
+  .logo-text{font-weight:800;font-size:15px;letter-spacing:.5px}
+  .logo-text small{display:block;color:var(--muted);font-weight:500;font-size:11px;letter-spacing:1px;margin-top:2px}
+  h1{
+    font-size:clamp(28px,5vw,42px);font-weight:800;line-height:1.1;
+    background:linear-gradient(135deg,#fff 0%,#c4b5fd 50%,#818cf8 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    margin-bottom:10px;letter-spacing:-.5px;
+  }
+  header p{color:var(--muted);font-size:15px}
+  header a{color:var(--accent3);text-decoration:none;font-weight:600}
+  header a:hover{text-decoration:underline}
 
+  .card{
+    background:linear-gradient(180deg,rgba(17,24,39,.9),rgba(13,18,32,.9));
+    border:1px solid var(--border);border-radius:18px;padding:24px;
+    backdrop-filter:blur(10px);box-shadow:0 4px 30px -10px rgba(0,0,0,.5);
+    margin-bottom:20px;
+  }
+
+  /* Upload */
+  .upload-zone{
+    border:2px dashed var(--border2);border-radius:16px;
+    padding:48px 24px;text-align:center;cursor:pointer;
+    transition:all .25s ease;background:rgba(139,92,246,.02);
+  }
+  .upload-zone:hover,.upload-zone.drag{
+    border-color:var(--accent);background:rgba(139,92,246,.08);
+    transform:translateY(-2px);
+  }
+  .upload-icon{
+    width:64px;height:64px;border-radius:16px;margin:0 auto 16px;
+    background:linear-gradient(135deg,rgba(139,92,246,.25),rgba(99,102,241,.15));
+    display:flex;align-items:center;justify-content:center;
+    border:1px solid rgba(139,92,246,.3);
+  }
+  .upload-icon svg{width:32px;height:32px;stroke:var(--accent3)}
+  .upload-zone h3{font-size:17px;margin-bottom:6px;font-weight:700}
+  .upload-zone p{color:var(--muted);font-size:13px}
+  .upload-zone .formats{
+    display:inline-flex;gap:6px;margin-top:12px;flex-wrap:wrap;justify-content:center;
+  }
+  .tag{
+    padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;
+    background:rgba(139,92,246,.15);color:var(--accent3);
+    border:1px solid rgba(139,92,246,.25);
+  }
+
+  /* Options grid */
+  .options{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:16px;margin-top:20px;
+  }
+  .field label{
+    display:block;font-size:12px;font-weight:600;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;
+  }
+  .field select,.field input[type=text],.field input[type=number],.field input[type=password]{
+    width:100%;padding:11px 14px;border-radius:10px;
+    background:var(--panel2);border:1px solid var(--border2);
+    color:var(--text);font-size:14px;font-family:inherit;outline:none;
+    transition:all .15s;
+  }
+  .field select:focus,.field input:focus{
+    border-color:var(--accent);box-shadow:0 0 0 3px rgba(139,92,246,.15);
+  }
+  .field select{cursor:pointer}
+  .switch-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:11px 14px;border-radius:10px;background:var(--panel2);
+    border:1px solid var(--border2);cursor:pointer;
+  }
+  .switch-row span{font-size:13px;font-weight:500}
+  .switch{
+    width:44px;height:24px;border-radius:20px;background:var(--border2);
+    position:relative;transition:all .2s;flex-shrink:0;
+  }
+  .switch::after{
+    content:'';position:absolute;width:18px;height:18px;border-radius:50%;
+    background:#fff;top:3px;left:3px;transition:all .2s;
+  }
+  .switch.on{background:var(--accent)}
+  .switch.on::after{left:23px}
+
+  /* API settings */
+  .api-toggle{
+    background:none;border:1px solid var(--border2);color:var(--muted);
+    padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer;
+    font-family:inherit;font-weight:500;transition:all .15s;
+  }
+  .api-toggle:hover{color:var(--text);border-color:var(--accent)}
+  .api-settings{display:none;margin-top:16px; padding: 16px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--border);}
+  .api-settings.show{display:block}
+  
+  .api-input-group {
+    display: flex; gap: 10px;
+  }
+  .api-input-group input {
+    flex: 1;
+  }
+  .btn-save-key {
+    padding: 0 20px; border-radius: 10px; background: var(--green); color: #fff;
+    border: none; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit;
+  }
+  .btn-save-key:hover {
+    background: #059669;
+  }
+
+  /* Files list */
+  .files-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+  .files-header h2{font-size:18px;font-weight:700}
+  .files-header .count{
+    font-size:12px;color:var(--muted);padding:4px 10px;border-radius:6px;
+    background:var(--panel2);
+  }
+  .files-list{display:flex;flex-direction:column;gap:10px}
+  .file-item{
+    display:flex;align-items:center;gap:14px;padding:14px 16px;
+    background:var(--panel2);border:1px solid var(--border2);border-radius:12px;
+    transition:all .2s;
+  }
+  .file-item.done{border-color:rgba(16,185,129,.4);background:rgba(16,185,129,.05)}
+  .file-item.error{border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.05)}
+  .file-icon{
+    width:40px;height:40px;border-radius:10px;flex-shrink:0;
+    background:linear-gradient(135deg,rgba(139,92,246,.3),rgba(99,102,241,.15));
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:800;color:var(--accent3);
+  }
+  .file-info{flex:1;min-width:0}
+  .file-name{
+    font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;
+    text-overflow:ellipsis;margin-bottom:6px;
+  }
+  .file-meta{font-size:11px;color:var(--muted);display:flex;gap:10px;margin-bottom:6px}
+  .progress-bar{
+    height:5px;background:var(--border);border-radius:10px;overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;width:0;border-radius:10px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    transition:width .3s ease;
+  }
+  .file-item.done .progress-fill{background:linear-gradient(90deg,var(--green),#059669)}
+  .file-item.error .progress-fill{background:var(--red)}
+  .file-actions{display:flex;gap:8px;flex-shrink:0}
+  .btn-icon{
+    width:34px;height:34px;border-radius:8px;border:1px solid var(--border2);
+    background:var(--panel);color:var(--muted);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;transition:all .15s;
+  }
+  .btn-icon:hover{color:var(--text);border-color:var(--accent)}
+  .btn-icon.success:hover{color:var(--green);border-color:var(--green)}
+  .btn-icon.danger:hover{color:var(--red);border-color:var(--red)}
+  .btn-icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+
+  /* Action buttons */
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+  .btn{
+    flex:1;min-width:180px;padding:15px 24px;border-radius:12px;
+    border:none;font-family:inherit;font-size:15px;font-weight:700;
+    cursor:pointer;transition:all .2s;display:flex;align-items:center;
+    justify-content:center;gap:10px;letter-spacing:.3px;
+  }
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn-primary{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;box-shadow:var(--shadow);
+  }
+  .btn-primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 25px 50px -15px var(--accent)}
+  .btn-secondary{
+    background:var(--panel2);color:var(--text);border:1px solid var(--border2);
+  }
+  .btn-secondary:hover:not(:disabled){border-color:var(--accent)}
+  .btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+  .spin{animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* Toast */
+  .toast-wrap{
+    position:fixed;bottom:24px;right:24px;z-index:1000;
+    display:flex;flex-direction:column;gap:10px;pointer-events:none;
+  }
+  .toast{
+    padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;
+    background:var(--panel);border:1px solid var(--border2);color:var(--text);
+    box-shadow:0 10px 30px -5px rgba(0,0,0,.5);
+    animation:slideIn .3s ease;pointer-events:auto;max-width:340px;
+  }
+  .toast.success{border-color:rgba(16,185,129,.5);color:var(--green)}
+  .toast.error{border-color:rgba(239,68,68,.5);color:var(--red)}
+  @keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+  .empty-state{
+    text-align:center;padding:40px 20px;color:var(--muted);font-size:14px;
+  }
+
+  @media (max-width:640px){
+    .container{padding:20px 14px}
+    .card{padding:18px}
+    .upload-zone{padding:32px 16px}
+    .options{grid-template-columns:1fr}
+    .btn{min-width:100%}
+    .api-input-group { flex-direction: column; }
+    .btn-save-key { padding: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo">
+      <div class="logo-icon">DG</div>
+      <div class="logo-text">
+        SUBTITLES TRANSLATE
+        <small>ENGLISH → SINHALA</small>
+      </div>
+    </div>
+    <h1>English Subtitles to<br>Sinhala — Instantly</h1>
+    <p>Powered by AI · Made for <a href="https://dgsubz.netlify.app" target="_blank" rel="noopener">dgsubz.netlify.app</a></p>
+  </header>
+
+  <!-- Upload -->
+  <div class="card">
+    <div class="upload-zone" id="uploadZone">
+      <div class="upload-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+      </div>
+      <h3>Drop subtitle files or click to browse</h3>
+      <p>Translate up to 15 subtitle files at once</p>
+      <div class="formats">
+        <span class="tag">.SRT</span>
+        <span class="tag">.ASS</span>
+        <span class="tag">.SSA</span>
+      </div>
+    </div>
+    <input type="file" id="fileInput" multiple accept=".srt,.ass,.ssa" style="display:none">
+
+    <div class="options">
+      <div class="field">
+        <label>Font Family</label>
+        <select id="fontFamily">
+          <option value="Iskoola Pota">Iskoola Pota (Windows)</option>
+          <option value="FMAbhaya">FMAbhaya</option>
+          <option value="Noto Sans Sinhala">Noto Sans Sinhala</option>
+          <option value="Nirmala UI">Nirmala UI</option>
+          <option value="Malithi Web">Malithi Web</option>
+          <option value="Arial Unicode MS">Arial Unicode MS</option>
+          <option value="Custom...">Custom...</option>
+        </select>
+      </div>
+      <div class="field" id="customFontField" style="display:none">
+        <label>Custom Font Name</label>
+        <input type="text" id="customFont" placeholder="e.g. Iskoola Pota">
+      </div>
+      <div class="field">
+        <label>Font Size</label>
+        <input type="number" id="fontSize" value="20" min="10" max="48">
+      </div>
+      <div class="field">
+        <label>Watermark every N lines</label>
+        <input type="number" id="wmInterval" value="25" min="0" max="200">
+      </div>
+      <div class="field">
+        <label>AI Model</label>
+        <select id="model">
+          <option value="anthropic/claude-3.5-haiku">Claude 3.5 Haiku (fast + good)</option>
+          <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet (best quality)</option>
+          <option value="google/gemini-flash-1.5">Gemini Flash 1.5 (fastest)</option>
+          <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Parallel Requests</label>
+        <input type="number" id="concurrency" value="3" min="1" max="10">
+      </div>
+    </div>
+
+    <button class="api-toggle" id="apiToggle" style="margin-top:16px">⚙️ API Settings (OpenRouter Key)</button>
+    <div class="api-settings" id="apiSettings">
+      <div class="field">
+        <label>OpenRouter API Key</label>
+        <div class="api-input-group">
+          <input type="password" id="apiKey" placeholder="sk-or-v1-...">
+          <button class="btn-save-key" id="saveKeyBtn">Save Key</button>
+        </div>
+        <p style="font-size: 11px; color: var(--muted); margin-top: 8px;">* Key එක Save කළ පසු ඔයාගේ බ්‍රව්සර් එකේ පමණක් ආරක්ෂිතව ඉතිරි වේ.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Files -->
+  <div class="card" id="filesCard" style="display:none">
+    <div class="files-header">
+      <h2>📁 Files</h2>
+      <span class="count" id="filesCount">0 files</span>
+    </div>
+    <div class="files-list" id="filesList"></div>
+    <div class="actions">
+      <button class="btn btn-primary" id="translateBtn">
+        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Translate All
+      </button>
+      <button class="btn btn-secondary" id="downloadAllBtn" disabled>
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download All
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* =========================================================
+   DG SUBTITLES TRANSLATE — app.js
+   ========================================================= */
+
+const WATERMARK_TEXT = 'dgsubz.netlify.app sinhala subtitles download';
+const ASS_WM = '{\\r\\fs16\\c&H808080&}' + WATERMARK_TEXT;
+const SRT_WM = '{\\fs14\\c&H808080&}' + WATERMARK_TEXT;
+const CHUNK_SIZE = 30;
+
+const SYSTEM_PROMPT = `You are "DG Subtitles Translate", an elite English-to-Sinhala subtitle translator.
+
+Translate English subtitle lines into NATURAL, CONVERSATIONAL, SPOKEN Sinhala (කතා කරන භාෂාව) — the way real Sri Lankans actually talk in movies, TV, and daily life. NOT formal written Sinhala.
+
+CRITICAL RULES:
+1. Use SPOKEN/colloquial Sinhala: "ඔයා" not "ඔබ", "කොහෙද" not "කොහේද", "මොකද" not "කුමක්ද", "ඉන්නවා" not "සිටිනවා", "කරනවා" not "කරයි".
+2. Translate MEANING, not word-for-word. Sound like a native speaker wrote it by hand.
+3. Capture emotion, tone, jokes, sarcasm, idioms — not literally.
+4. Preserve EXACTLY: numbers, \\N (ASS newline), and placeholder tokens like <<0>>, <<1>> etc.
+5. Keep proper nouns in English if they sound natural that way.
+6. Output ONLY the Sinhala translation — no English, no quotes, no explanation.
+7. If a line is a sound/scream/name, translate appropriately (e.g. "Ahh!" → "අහ්!").
+8. Keep subtitle lines SHORT and readable (they must fit on screen).`;
+
+const state = {
+  files: [],          
+  translating: false,
+};
+
+/* ---------- UI refs ---------- */
+const $ = (id) => document.getElementById(id);
+const uploadZone = $('uploadZone');
+const fileInput = $('fileInput');
+const filesCard = $('filesCard');
+const filesList = $('filesList');
+const filesCount = $('filesCount');
+const translateBtn = $('translateBtn');
+const downloadAllBtn = $('downloadAllBtn');
+const fontFamily = $('fontFamily');
+const customFontField = $('customFontField');
+const customFont = $('customFont');
+const fontSizeInput = $('fontSize');
+const wmIntervalInput = $('wmInterval');
+const modelSelect = $('model');
+const concurrencyInput = $('concurrency');
+const apiKeyInput = $('apiKey');
+const saveKeyBtn = $('saveKeyBtn');
+const apiToggle = $('apiToggle');
+const apiSettings = $('apiSettings');
+
+/* ---------- Toast ---------- */
+function toast(msg, type = '') {
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  $('toastWrap').appendChild(el);
+  setTimeout(() => {
+    el.style.transition = 'all .3s';
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(400px)';
+    setTimeout(() => el.remove(), 300);
+  }, 3800);
+}
+
+/* ---------- Local Storage & API Key ---------- */
+// පේජ් එක ලෝඩ් වෙද්දි සේව් කරලා තියෙන key එක ගන්නවා
+window.addEventListener('DOMContentLoaded', () => {
+  const savedKey = localStorage.getItem('openrouter_api_key');
+  if (savedKey) {
+    apiKeyInput.value = savedKey;
+    apiToggle.textContent = '⚙️ API Settings (Key Saved)';
+    apiToggle.style.color = 'var(--green)';
+    apiToggle.style.borderColor = 'rgba(16,185,129,.4)';
+  }
+});
+
+saveKeyBtn.addEventListener('click', () => {
+  const key = apiKeyInput.value.trim();
+  if (!key) {
+    toast('Please enter an API key', 'error');
+    return;
+  }
+  localStorage.setItem('openrouter_api_key', key);
+  toast('✅ API Key saved securely!', 'success');
+  apiToggle.textContent = '⚙️ API Settings (Key Saved)';
+  apiToggle.style.color = 'var(--green)';
+  apiToggle.style.borderColor = 'rgba(16,185,129,.4)';
+  setTimeout(() => { apiSettings.classList.remove('show'); }, 800);
+});
+
+/* ---------- File input ---------- */
+uploadZone.addEventListener('click', () => fileInput.click());
+uploadZone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  uploadZone.classList.add('drag');
+});
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag'));
+uploadZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag');
+  handleFiles(e.dataTransfer.files);
+});
+fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
+apiToggle.addEventListener('click', () => apiSettings.classList.toggle('show'));
+fontFamily.addEventListener('change', () => {
+  customFontField.style.display = fontFamily.value === 'Custom...' ? 'block' : 'none';
+});
+
+function getFontName() {
+  return fontFamily.value === 'Custom...' ? (customFont.value || 'Iskoola Pota') : fontFamily.value;
+}
+
+/* ---------- File handling ---------- */
+function handleFiles(fileList) {
+  const incoming = Array.from(fileList).filter(f => /\.(srt|ass|ssa)$/i.test(f.name));
+  if (!incoming.length) {
+    toast('Please upload .srt, .ass or .ssa files', 'error');
+    return;
+  }
+  const room = 15 - state.files.length;
+  if (room <= 0) {
+    toast('Maximum 15 files allowed', 'error');
+    return;
+  }
+  const accepted = incoming.slice(0, room);
+  if (incoming.length > room) toast(`Only ${room} more file(s) added (15 max)`, 'error');
+
+  let loaded = 0;
+  accepted.forEach(f => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const ext = f.name.split('.').pop().toLowerCase();
+      state.files.push({
+        id: crypto.randomUUID(),
+        name: f.name,
+        ext,
+        original: e.target.result,
+        parsed: null,
+        output: null,
+        status: 'pending',
+        progress: 0,
+        error: null,
+      });
+      loaded++;
+      if (loaded === accepted.length) {
+        renderFiles();
+        filesCard.style.display = 'block';
+        fileInput.value = '';
+      }
+    };
+    reader.readAsText(f, 'utf-8');
+  });
+}
+
+/* ---------- Render files ---------- */
+function renderFiles() {
+  filesCount.textContent = `${state.files.length} file${state.files.length !== 1 ? 's' : ''}`;
+  filesList.innerHTML = '';
+  state.files.forEach(f => {
+    const item = document.createElement('div');
+    item.className = 'file-item ' + (f.status === 'done' ? 'done' : f.status === 'error' ? 'error' : '');
+    item.dataset.id = f.id;
+
+    const lineInfo = f.parsed
+      ? (f.ext === 'srt' ? `${f.parsed.blocks.length} blocks` : `${f.parsed.dialogues.length} lines`)
+      : '—';
+
+    item.innerHTML = `
+      <div class="file-icon">${f.ext.toUpperCase()}</div>
+      <div class="file-info">
+        <div class="file-name">${escapeHTML(f.name)}</div>
+        <div class="file-meta">
+          <span>${lineInfo}</span>
+          <span>${statusLabel(f.status)}</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${f.progress}%"></div></div>
+      </div>
+      <div class="file-actions">
+        ${f.status === 'done'
+          ? `<button class="btn-icon success" data-action="download" title="Download"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>`
+          : ''}
+        <button class="btn-icon danger" data-action="remove" title="Remove"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg></button>
+      </div>
+    `;
+    filesList.appendChild(item);
+  });
+
+  const doneCount = state.files.filter(f => f.status === 'done').length;
+  downloadAllBtn.disabled = doneCount === 0 || state.translating;
+  translateBtn.disabled = state.translating || state.files.length === 0;
+  translateBtn.innerHTML = state.translating
+    ? `<svg class="spin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20" stroke-width="2"/></svg> Translating...`
+    : `<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg> Translate All`;
+}
+
+function statusLabel(s) {
+  return { pending: 'Ready', parsing: 'Parsing…', translating: 'Translating…', done: '✅ Done', error: '❌ Error' }[s] || s;
+}
+
+function escapeHTML(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+filesList.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  const item = btn.closest('.file-item');
+  const id = item.dataset.id;
+  const file = state.files.find(f => f.id === id);
+  if (!file) return;
+  if (btn.dataset.action === 'remove') {
+    state.files = state.files.filter(f => f.id !== id);
+    if (!state.files.length) filesCard.style.display = 'none';
+    renderFiles();
+  } else if (btn.dataset.action === 'download') {
+    downloadFile(file);
+  }
+});
+
+/* =========================================================
+   PARSERS
+   ========================================================= */
+
+function parseSRT(content) {
+  const norm = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const rawBlocks = norm.split(/\n{2,}/).filter(b => b.trim());
+  const blocks = [];
+  for (const raw of rawBlocks) {
+    const lines = raw.split('\n');
+    const timeIdx = lines.findIndex(l => l.includes('-->'));
+    if (timeIdx === -1) continue;
+    const idx = timeIdx > 0 ? lines[0].trim() : String(blocks.length + 1);
+    const time = lines[timeIdx].trim();
+    const text = lines.slice(timeIdx + 1).join('\n').replace(/\n+$/g, '');
+    blocks.push({ idx, time, text });
+  }
+  return { type: 'srt', blocks };
+}
+
+function parseASS(content) {
+  const lines = content.replace(/\r\n/g, '\n').split('\n');
+  const dialogues = [];
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].startsWith('Dialogue:')) {
+      const after = lines[i].substring('Dialogue:'.length);
+      const parts = after.split(',');
+      if (parts.length < 10) continue;
+      const prefix = parts.slice(0, 9).join(',');
+      const text = parts.slice(9).join(',');
+      dialogues.push({ lineIndex: i, prefix, text, originalLine: lines[i] });
+    }
+  }
+  return { type: 'ass', lines, dialogues };
+}
+
+/* =========================================================
+   TAG PROTECTION (for ASS override tags)
+   ========================================================= */
+
+const TAG_START = '\u2063'; 
+const TAG_END = '\u2063';
+
+function protectText(text) {
+  const tags = [];
+  const protectedText = text.replace(/\{[^}]*\}/g, (m) => {
+    tags.push(m);
+    return `${TAG_START}T${tags.length - 1}${TAG_END}`;
+  });
+  return { text: protectedText, tags };
+}
+function restoreText(text, tags) {
+  if (!tags.length) return text;
+  return text.replace(/\u2063T(\d+)\u2063/g, (_, i) => tags[+i] ?? '');
+}
+
+/* =========================================================
+   TRANSLATION
+   ========================================================= */
+
+async function translateAll(texts, opts, onProgress) {
+  const chunks = [];
+  for (let i = 0; i < texts.length; i += CHUNK_SIZE) {
+    chunks.push({ start: i, items: texts.slice(i, i + CHUNK_SIZE) });
+  }
+  const results = new Array(texts.length);
+  let done = 0;
+  let cursor = 0;
+
+  async function worker() {
+    while (cursor < chunks.length) {
+      const ci = cursor++;
+      const chunk = chunks[ci];
+      let attempt = 0;
+      let success = false;
+      while (attempt < 3 && !success) {
+        try {
+          const translated = await translateChunk(chunk.items, opts);
+          for (let k = 0; k < chunk.items.length; k++) {
+            results[chunk.start + k] = translated[k] !== undefined ? translated[k] : chunk.items[k];
+          }
+          done += chunk.items.length;
+          onProgress?.(done, texts.length);
+          success = true;
+        } catch (e) {
+          attempt++;
+          if (attempt >= 3) {
+            for (let k = 0; k < chunk.items.length; k++) {
+              results[chunk.start + k] = chunk.items[k];
+            }
+            done += chunk.items.length;
+            onProgress?.(done, texts.length);
+            console.warn('Chunk failed after retries:', e);
+            success = true;
+          } else {
+            await new Promise(r => setTimeout(r, 800 * attempt));
+          }
+        }
+      }
+    }
+  }
+
+  const workers = [];
+  const n = Math.max(1, Math.min(10, opts.concurrency || 3));
+  for (let i = 0; i < n; i++) workers.push(worker());
+  await Promise.all(workers);
+  return results;
+}
+
+async function translateChunk(items, opts) {
+  const body = {
+    model: opts.model,
+    temperature: 0.3,
+    max_tokens: 4000,
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
+      {
+        role: 'user',
+        content: `Translate each element of this JSON array into spoken Sinhala.
+Return ONLY a valid JSON array of EXACTLY ${items.length} strings, in the same order. No markdown, no explanation.
+
+Input:
+${JSON.stringify(items)}`
+      }
+    ]
+  };
+
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${opts.apiKey}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://dgsubz.netlify.app',
+      'X-Title': 'DG Subtitles Translate'
+    },
+    body: JSON.stringify(body)
+  });
+
+  if (!res.ok) {
+    const t = await res.text();
+    throw new Error(`API ${res.status}: ${t.slice(0, 200)}`);
+  }
+  const data = await res.json();
+  let content = (data?.choices?.[0]?.message?.content || '').trim();
+  content = content.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+
+  let parsed = null;
+  try { parsed = JSON.parse(content); } catch (_) {
+    const m = content.match(/\[[\s\S]*\]/);
+    if (m) { try { parsed = JSON.parse(m[0]); } catch (_) {} }
+  }
+
+  if (!Array.isArray(parsed) || parsed.length !== items.length) {
+    throw new Error(`Bad response (expected ${items.length}, got ${parsed?.length ?? 'none'})`);
+  }
+  return parsed.map(x => typeof x === 'string' ? x : String(x));
+}
+
+/* =========================================================
+   APPLY FONT + WATERMARK
+   ========================================================= */
+
+function applyFontSRT(text, font, size) {
+  if (!text) return text;
+  const override = `{\\fn${font}\\fs${size}}`;
+  return text.split('\n').map(l => l.trim() ? override + l : l).join('\n');
+}
+
+function applyFontASS(assObj, font, size) {
+  const lines = assObj.lines.map(line => {
+    if (line.startsWith('Style:')) {
+      const parts = line.split(',');
+      if (parts.length >= 3) {
+        parts[1] = font;
+        parts[2] = String(size);
+        return parts.join(',');
+      }
+    }
+    return line;
+  });
+  return { ...assObj, lines };
+}
+
+/* =========================================================
+   FILE TRANSLATION PIPELINE
+   ========================================================= */
+
+async function translateFile(file, opts) {
+  const font = opts.font;
+  const size = opts.fontSize;
+  const wmInt = opts.wmInterval;
+
+  if (file.ext === 'srt') {
+    file.parsed = parseSRT(file.original);
+    const blocks = file.parsed.blocks;
+    if (!blocks.length) throw new Error('No valid SRT blocks found');
+
+    const toTranslate = [];
+    const meta = []; 
+    blocks.forEach((b, i) => {
+      const { text, tags } = protectText(b.text);
+      if (text.trim()) {
+        toTranslate.push(text);
+        meta.push({ blockIdx: i, tags });
+      }
+    });
+
+    file.status = 'translating';
+    file.progress = 0;
+    renderFiles();
+
+    const translated = await translateAll(toTranslate, opts, (done, total) => {
+      file.progress = Math.min(99, Math.round((done / total) * 100));
+      updateFileProgress(file.id, file.progress);
+    });
+
+    meta.forEach((m, k) => {
+      const restored = restoreText(translated[k], m.tags);
+      blocks[m.blockIdx].text = applyFontSRT(restored, font, size);
+    });
+
+    if (wmInt > 0) {
+      blocks.forEach((b, i) => {
+        if ((i + 1) % wmInt === 0 && b.text.trim()) {
+          b.text += '\n' + SRT_WM;
+        }
+      });
+    }
+
+    file.output = serializeSRT(blocks);
+    file.progress = 100;
+    file.status = 'done';
+    return;
+  }
+
+  if (file.ext === 'ass' || file.ext === 'ssa') {
+    const ass = parseASS(file.original);
+    file.parsed = ass;
+    if (!ass.dialogues.length) throw new Error('No Dialogue lines found in ASS/SSA');
+
+    const toTranslate = [];
+    const meta = [];
+    ass.dialogues.forEach((d, i) => {
+      const { text, tags } = protectText(d.text);
+      if (text.trim()) {
+        toTranslate.push(text);
+        meta.push({ dIdx: i, tags });
+      }
+    });
+
+    file.status = 'translating';
+    file.progress = 0;
+    renderFiles();
+
+    const translated = await translateAll(toTranslate, opts, (done, total) => {
+      file.progress = Math.min(99, Math.round((done / total) * 100));
+      updateFileProgress(file.id, file.progress);
+    });
+
+    meta.forEach((m, k) => {
+      const restored = restoreText(translated[k], m.tags);
+      ass.dialogues[m.dIdx].text = restored;
+    });
+
+    if (wmInt > 0) {
+      ass.dialogues.forEach((d, i) => {
+        if ((i + 1) % wmInt === 0 && d.text.trim()) {
+          d.text += '\\N' + ASS_WM;
+        }
+      });
+    }
+
+    const updated = applyFontASS(ass, font, size);
+
+    const newLines = updated.lines.slice();
+    ass.dialogues.forEach((d) => {
+      newLines[d.lineIndex] = 'Dialogue: ' + d.prefix + ',' + d.text;
+    });
+
+    file.output = newLines.join('\n');
+    file.progress = 100;
+    file.status = 'done';
+    return;
+  }
+
+  throw new Error('Unsupported format: ' + file.ext);
+}
+
+function updateFileProgress(id, pct) {
+  const item = filesList.querySelector(`[data-id="${id}"]`);
+  if (!item) return;
+  const bar = item.querySelector('.progress-fill');
+  if (bar) bar.style.width = pct + '%';
+  const meta = item.querySelector('.file-meta span:nth-child(2)');
+  if (meta) meta.textContent = statusLabel('translating');
+}
+
+function serializeSRT(blocks) {
+  return blocks.map((b, i) => {
+    return `${i + 1}\n${b.time}\n${b.text}`;
+  }).join('\n\n') + '\n';
+}
+
+/* =========================================================
+   TRANSLATE ALL (main action)
+   ========================================================= */
+
+translateBtn.addEventListener('click', async () => {
+  if (state.translating) return;
+  
+  // API Key එක තියෙනවද බලනවා
+  const apiKey = apiKeyInput.value.trim();
+  if (!apiKey) {
+    toast('Please enter and save your OpenRouter API key first', 'error');
+    apiSettings.classList.add('show');
+    apiKeyInput.focus();
+    return;
+  }
+  
+  const pending = state.files.filter(f => f.status !== 'done');
+  if (!pending.length) {
+    toast('All files are already translated', 'error');
+    return;
+  }
+
+  state.translating = true;
+  renderFiles();
+
+  const opts = {
+    apiKey,
+    model: modelSelect.value,
+    concurrency: Math.max(1, parseInt(concurrencyInput.value) || 3),
+    font: getFontName(),
+    fontSize: Math.max(10, parseInt(fontSizeInput.value) || 20),
+    wmInterval: Math.max(0, parseInt(wmIntervalInput.value) || 0),
+  };
+
+  let ok = 0, fail = 0;
+  for (const file of pending) {
+    file.status = 'translating';
+    file.progress = 0;
+    file.error = null;
+    renderFiles();
+    try {
+      await translateFile(file, opts);
+      ok++;
+      toast(`✅ ${file.name} done`, 'success');
+    } catch (e) {
+      console.error(e);
+      file.status = 'error';
+      file.error = e.message;
+      fail++;
+      toast(`❌ ${file.name}: ${e.message}`, 'error');
+    }
+    renderFiles();
+  }
+
+  state.translating = false;
+  renderFiles();
+  if (ok && !fail) toast(`🎉 All ${ok} file(s) translated!`, 'success');
+  else if (ok && fail) toast(`Done: ${ok} · Failed: ${fail}`, 'error');
+});
+
+/* =========================================================
+   DOWNLOAD
+   ========================================================= */
+
+function downloadFile(file) {
+  if (!file.output) return;
+  const baseName = file.name.replace(/\.(srt|ass|ssa)$/i, '');
+  const suffix = file.ext === 'srt' ? '.si.srt' : '.si.ass';
+  const blob = new Blob([file.output], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = baseName + suffix;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+downloadAllBtn.addEventListener('click', () => {
+  const done = state.files.filter(f => f.status === 'done');
+  if (!done.length) return;
+  done.forEach((f, i) => setTimeout(() => downloadFile(f), i * 350));
+  toast(`⬇️ Downloading ${done.length} file(s)...`, 'success');
+});
+
+/* ---------- Init ---------- */
+renderFiles();
+</script>
+</body>
+</html>
