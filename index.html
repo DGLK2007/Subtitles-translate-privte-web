@@ -107,22 +107,6 @@
     border-color:var(--accent);box-shadow:0 0 0 3px rgba(139,92,246,.15);
   }
   .field select{cursor:pointer}
-  .switch-row{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:11px 14px;border-radius:10px;background:var(--panel2);
-    border:1px solid var(--border2);cursor:pointer;
-  }
-  .switch-row span{font-size:13px;font-weight:500}
-  .switch{
-    width:44px;height:24px;border-radius:20px;background:var(--border2);
-    position:relative;transition:all .2s;flex-shrink:0;
-  }
-  .switch::after{
-    content:'';position:absolute;width:18px;height:18px;border-radius:50%;
-    background:#fff;top:3px;left:3px;transition:all .2s;
-  }
-  .switch.on{background:var(--accent)}
-  .switch.on::after{left:23px}
 
   /* API settings */
   .api-toggle{
@@ -134,19 +118,13 @@
   .api-settings{display:none;margin-top:16px; padding: 16px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--border);}
   .api-settings.show{display:block}
   
-  .api-input-group {
-    display: flex; gap: 10px;
-  }
-  .api-input-group input {
-    flex: 1;
-  }
+  .api-input-group { display: flex; gap: 10px; }
+  .api-input-group input { flex: 1; }
   .btn-save-key {
     padding: 0 20px; border-radius: 10px; background: var(--green); color: #fff;
     border: none; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit;
   }
-  .btn-save-key:hover {
-    background: #059669;
-  }
+  .btn-save-key:hover { background: #059669; }
 
   /* Files list */
   .files-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
@@ -155,7 +133,7 @@
     font-size:12px;color:var(--muted);padding:4px 10px;border-radius:6px;
     background:var(--panel2);
   }
-  .files-list{display:flex;flex-direction:column;gap:10px}
+  .files-list{display:flex;flex-direction:column;gap:10px; margin-bottom: 20px;}
   .file-item{
     display:flex;align-items:center;gap:14px;padding:14px 16px;
     background:var(--panel2);border:1px solid var(--border2);border-radius:12px;
@@ -197,7 +175,7 @@
   .btn-icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
 
   /* Action buttons */
-  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;}
   .btn{
     flex:1;min-width:180px;padding:15px 24px;border-radius:12px;
     border:none;font-family:inherit;font-size:15px;font-weight:700;
@@ -233,10 +211,6 @@
   .toast.error{border-color:rgba(239,68,68,.5);color:var(--red)}
   @keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
 
-  .empty-state{
-    text-align:center;padding:40px 20px;color:var(--muted);font-size:14px;
-  }
-
   @media (max-width:640px){
     .container{padding:20px 14px}
     .card{padding:18px}
@@ -262,7 +236,7 @@
     <p>Powered by AI · Made for <a href="https://dgsubz.netlify.app" target="_blank" rel="noopener">dgsubz.netlify.app</a></p>
   </header>
 
-  <!-- Upload -->
+  <!-- Upload & Settings -->
   <div class="card">
     <div class="upload-zone" id="uploadZone">
       <div class="upload-icon">
@@ -335,13 +309,14 @@
     </div>
   </div>
 
-  <!-- Files -->
+  <!-- Files & Action Buttons -->
   <div class="card" id="filesCard" style="display:none">
     <div class="files-header">
       <h2>📁 Files</h2>
       <span class="count" id="filesCount">0 files</span>
     </div>
     <div class="files-list" id="filesList"></div>
+    
     <div class="actions">
       <button class="btn btn-primary" id="translateBtn">
         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -422,7 +397,6 @@ function toast(msg, type = '') {
 }
 
 /* ---------- Local Storage & API Key ---------- */
-// පේජ් එක ලෝඩ් වෙද්දි සේව් කරලා තියෙන key එක ගන්නවා
 window.addEventListener('DOMContentLoaded', () => {
   const savedKey = localStorage.getItem('openrouter_api_key');
   if (savedKey) {
@@ -447,7 +421,7 @@ saveKeyBtn.addEventListener('click', () => {
   setTimeout(() => { apiSettings.classList.remove('show'); }, 800);
 });
 
-/* ---------- File input ---------- */
+/* ---------- File input & Drag Drop ---------- */
 uploadZone.addEventListener('click', () => fileInput.click());
 uploadZone.addEventListener('dragover', (e) => {
   e.preventDefault();
@@ -470,7 +444,7 @@ function getFontName() {
   return fontFamily.value === 'Custom...' ? (customFont.value || 'Iskoola Pota') : fontFamily.value;
 }
 
-/* ---------- File handling ---------- */
+/* ---------- File handling (FIXED) ---------- */
 function handleFiles(fileList) {
   const incoming = Array.from(fileList).filter(f => /\.(srt|ass|ssa)$/i.test(f.name));
   if (!incoming.length) {
@@ -489,23 +463,42 @@ function handleFiles(fileList) {
   accepted.forEach(f => {
     const reader = new FileReader();
     reader.onload = (e) => {
-      const ext = f.name.split('.').pop().toLowerCase();
-      state.files.push({
-        id: crypto.randomUUID(),
-        name: f.name,
-        ext,
-        original: e.target.result,
-        parsed: null,
-        output: null,
-        status: 'pending',
-        progress: 0,
-        error: null,
-      });
+      try {
+        const ext = f.name.split('.').pop().toLowerCase();
+        // crypto.randomUUID() වෙනුවට සාමාන්‍ය ID එකක් යොදා ඇත (මොබයිල් එරර් එක මගහරවන්න)
+        const fileId = 'file_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+        
+        state.files.push({
+          id: fileId,
+          name: f.name,
+          ext,
+          original: e.target.result,
+          parsed: null,
+          output: null,
+          status: 'pending',
+          progress: 0,
+          error: null,
+        });
+      } catch (err) {
+        console.error("File read error:", err);
+        toast('Error reading file: ' + f.name, 'error');
+      }
+      
+      loaded++;
+      if (loaded === accepted.length) {
+        renderFiles();
+        filesCard.style.display = 'block'; // ෆයිල් ටික ආවම කාඩ් එක පෙන්වයි
+        fileInput.value = '';
+        // ෆයිල් ලිස්ට් එක තියෙන තැනට ස්ක්‍රෝල් වෙයි
+        setTimeout(() => filesCard.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+      }
+    };
+    reader.onerror = () => {
+      toast('Failed to read file: ' + f.name, 'error');
       loaded++;
       if (loaded === accepted.length) {
         renderFiles();
         filesCard.style.display = 'block';
-        fileInput.value = '';
       }
     };
     reader.readAsText(f, 'utf-8');
@@ -616,9 +609,8 @@ function parseASS(content) {
 }
 
 /* =========================================================
-   TAG PROTECTION (for ASS override tags)
+   TAG PROTECTION
    ========================================================= */
-
 const TAG_START = '\u2063'; 
 const TAG_END = '\u2063';
 
@@ -889,7 +881,6 @@ function serializeSRT(blocks) {
 translateBtn.addEventListener('click', async () => {
   if (state.translating) return;
   
-  // API Key එක තියෙනවද බලනවා
   const apiKey = apiKeyInput.value.trim();
   if (!apiKey) {
     toast('Please enter and save your OpenRouter API key first', 'error');
