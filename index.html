@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DG Subtitles Translate — English → Sinhala</title>
-<!-- ZIP ෆයිල් හදන්න සහ එළියට ගන්න ලයිබ්‍රරි දෙක -->
+<title>DG Subtitles Translate — English to Sinhala</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <style>
@@ -47,14 +46,12 @@
   .logo-text{font-weight:800;font-size:15px;letter-spacing:.5px}
   .logo-text small{display:block;color:var(--muted);font-weight:500;font-size:11px;letter-spacing:1px;margin-top:2px}
   h1{
-    font-size:clamp(28px,5vw,42px);font-weight:800;line-height:1.1;
+    font-size:clamp(28px,5vw,42px);font-weight:800;line-height:1.2;
     background:linear-gradient(135deg,#fff 0%,#c4b5fd 50%,#818cf8 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
     margin-bottom:10px;letter-spacing:-.5px;
   }
   header p{color:var(--muted);font-size:15px}
-  header a{color:var(--accent3);text-decoration:none;font-weight:600}
-  header a:hover{text-decoration:underline}
 
   .card{
     background:linear-gradient(180deg,rgba(17,24,39,.9),rgba(13,18,32,.9));
@@ -80,8 +77,8 @@
     border:1px solid rgba(139,92,246,.3);
   }
   .upload-icon svg{width:32px;height:32px;stroke:var(--accent3)}
-  .upload-zone h3{font-size:17px;margin-bottom:6px;font-weight:700}
-  .upload-zone p{color:var(--muted);font-size:13px}
+  .upload-zone h3{font-size:17px;margin-bottom:6px;font-weight:700;line-height:1.4}
+  .upload-zone p{color:var(--muted);font-size:13px;line-height:1.4}
   .upload-zone .formats{
     display:inline-flex;gap:6px;margin-top:12px;flex-wrap:wrap;justify-content:center;
   }
@@ -100,6 +97,7 @@
   .field label{
     display:block;font-size:12px;font-weight:600;color:var(--muted);
     text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;
+    line-height: 1.4;
   }
   .field select,.field input[type=text],.field input[type=number],.field input[type=password]{
     width:100%;padding:11px 14px;border-radius:10px;
@@ -177,6 +175,7 @@
   .btn-icon.success:hover{color:var(--green);border-color:var(--green)}
   .btn-icon.danger:hover{color:var(--red);border-color:var(--red)}
   .btn-icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+  .error-text { color: var(--red); font-size: 11px; margin-top: 4px; display: block; }
 
   /* Action buttons */
   .actions{display:flex;gap:12px;flex-wrap:wrap;}
@@ -184,7 +183,7 @@
     flex:1;min-width:180px;padding:15px 24px;border-radius:12px;
     border:none;font-family:inherit;font-size:15px;font-weight:700;
     cursor:pointer;transition:all .2s;display:flex;align-items:center;
-    justify-content:center;gap:10px;letter-spacing:.3px;
+    justify-content:center;gap:10px;letter-spacing:.3px; line-height: 1.2;
   }
   .btn:disabled{opacity:.4;cursor:not-allowed}
   .btn-primary{
@@ -238,7 +237,7 @@
       </div>
     </div>
     <h1>English Subtitles to<br>Sinhala — Instantly</h1>
-    <p>Powered by AI · Made for <a href="https://dgsubz.netlify.app" target="_blank" rel="noopener">dgsubz.netlify.app</a></p>
+    <p>Powered by AI · DG Subtitles Translate</p>
   </header>
 
   <div class="card">
@@ -250,8 +249,8 @@
           <line x1="12" y1="3" x2="12" y2="15"/>
         </svg>
       </div>
-      <h3>Drop .ZIP file or subtitle files</h3>
-      <p>Translate up to 15 subtitle files at once</p>
+      <h3>Drop .ZIP or Subtitle Files<br>(සබ් ෆයිල් හෝ ZIP ෆයිල් මෙතනට දාන්න)</h3>
+      <p>Translate up to 15 subtitle files at once<br>(එකවර සබ් ෆයිල් 15ක් දක්වා පරිවර්තනය කරන්න)</p>
       <div class="formats">
         <span class="tag zip">.ZIP</span>
         <span class="tag">.SRT</span>
@@ -263,61 +262,60 @@
 
     <div class="options">
       <div class="field">
-        <label>Font Family</label>
+        <label>Font Family (ෆොන්ට් වර්ගය)</label>
         <select id="fontFamily">
-          <option value="Iskoola Pota">Iskoola Pota (Windows)</option>
+          <option value="Iskoola Pota">Iskoola Pota</option>
           <option value="FMAbhaya">FMAbhaya</option>
           <option value="Noto Sans Sinhala">Noto Sans Sinhala</option>
           <option value="Nirmala UI">Nirmala UI</option>
           <option value="Malithi Web">Malithi Web</option>
           <option value="Arial Unicode MS">Arial Unicode MS</option>
-          <option value="Custom...">Custom...</option>
+          <option value="Custom...">Custom... (අලුතින් එකතු කරන්න)</option>
         </select>
       </div>
       <div class="field" id="customFontField" style="display:none">
-        <label>Custom Font Name</label>
+        <label>Custom Font Name (ෆොන්ට් එකේ නම)</label>
         <input type="text" id="customFont" placeholder="e.g. Iskoola Pota">
       </div>
       <div class="field">
-        <label>Font Size</label>
+        <label>Font Size (ෆොන්ට් සයිස් එක)</label>
         <input type="number" id="fontSize" value="20" min="10" max="48">
       </div>
       <div class="field">
-        <label>Watermark every N lines</label>
+        <label>Watermark every N lines<br>(N පේළියකට වරක් වෝටර්මාර්ක් එක)</label>
         <input type="number" id="wmInterval" value="25" min="0" max="200">
       </div>
       <div class="field">
-        <label>AI Model</label>
+        <label>AI Model (AI මොඩල් එක)</label>
         <select id="model">
-          <option value="anthropic/claude-3.5-haiku">Claude 3.5 Haiku (fast + good)</option>
-          <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet (best quality)</option>
+          <option value="anthropic/claude-3-5-haiku">Claude 3.5 Haiku (fast + good)</option>
+          <option value="anthropic/claude-3-5-sonnet">Claude 3.5 Sonnet (best quality)</option>
           <option value="google/gemini-flash-1.5">Gemini Flash 1.5 (fastest)</option>
           <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
         </select>
       </div>
       <div class="field">
-        <label>Parallel Requests</label>
+        <label>Parallel Requests (එකවර යන රික්වෙස්ට්)</label>
         <input type="number" id="concurrency" value="3" min="1" max="10">
       </div>
     </div>
 
-    <button class="api-toggle" id="apiToggle" style="margin-top:16px">⚙️ API Settings (OpenRouter Key)</button>
+    <button class="api-toggle" id="apiToggle" style="margin-top:16px">⚙️ API Settings (API කී එක)</button>
     <div class="api-settings" id="apiSettings">
       <div class="field">
         <label>OpenRouter API Key</label>
         <div class="api-input-group">
           <input type="password" id="apiKey" placeholder="sk-or-v1-...">
-          <button class="btn-save-key" id="saveKeyBtn">Save Key</button>
+          <button class="btn-save-key" id="saveKeyBtn">Save Key (සේව් කරන්න)</button>
         </div>
         <p style="font-size: 11px; color: var(--muted); margin-top: 8px;">* Key එක Save කළ පසු ඔයාගේ බ්‍රව්සර් එකේ පමණක් ආරක්ෂිතව ඉතිරි වේ.</p>
       </div>
     </div>
   </div>
 
-  <!-- Files & Action Buttons -->
   <div class="card" id="filesCard" style="display:none">
     <div class="files-header">
-      <h2>📁 Files</h2>
+      <h2>📁 Files (ෆයිල්ස්)</h2>
       <span class="count" id="filesCount">0 files</span>
     </div>
     <div class="files-list" id="filesList"></div>
@@ -325,11 +323,11 @@
     <div class="actions">
       <button class="btn btn-primary" id="translateBtn">
         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        Translate All
+        Translate All (පරිවර්තනය කරන්න)
       </button>
       <button class="btn btn-secondary" id="downloadAllBtn" disabled>
         <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Download All (.zip)
+        Download All (ඩවුන්ලෝඩ් කරන්න)
       </button>
     </div>
   </div>
@@ -338,14 +336,10 @@
 <div class="toast-wrap" id="toastWrap"></div>
 
 <script>
-/* =========================================================
-   DG SUBTITLES TRANSLATE — app.js
-   ========================================================= */
-
 const WATERMARK_TEXT = 'dgsubz.netlify.app sinhala subtitles download';
 const ASS_WM = '{\\r\\fs16\\c&H808080&}' + WATERMARK_TEXT;
 const SRT_WM = '{\\fs14\\c&H808080&}' + WATERMARK_TEXT;
-const CHUNK_SIZE = 30;
+const CHUNK_SIZE = 20; // Token limits වීම වැළැක්වීමට 20ට පහත හෙලන ලදී
 
 const SYSTEM_PROMPT = `You are "DG Subtitles Translate", an elite English-to-Sinhala subtitle translator.
 
@@ -366,7 +360,6 @@ const state = {
   translating: false,
 };
 
-/* ---------- UI refs ---------- */
 const $ = (id) => document.getElementById(id);
 const uploadZone = $('uploadZone');
 const fileInput = $('fileInput');
@@ -387,7 +380,6 @@ const saveKeyBtn = $('saveKeyBtn');
 const apiToggle = $('apiToggle');
 const apiSettings = $('apiSettings');
 
-/* ---------- Toast ---------- */
 function toast(msg, type = '') {
   const el = document.createElement('div');
   el.className = 'toast ' + type;
@@ -401,7 +393,6 @@ function toast(msg, type = '') {
   }, 3800);
 }
 
-/* ---------- Local Storage & API Key ---------- */
 window.addEventListener('DOMContentLoaded', () => {
   const savedKey = localStorage.getItem('openrouter_api_key');
   if (savedKey) {
@@ -426,18 +417,10 @@ saveKeyBtn.addEventListener('click', () => {
   setTimeout(() => { apiSettings.classList.remove('show'); }, 800);
 });
 
-/* ---------- File input & Drag Drop ---------- */
 uploadZone.addEventListener('click', () => fileInput.click());
-uploadZone.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  uploadZone.classList.add('drag');
-});
+uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('drag'); });
 uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag'));
-uploadZone.addEventListener('drop', (e) => {
-  e.preventDefault();
-  uploadZone.classList.remove('drag');
-  handleFiles(e.dataTransfer.files);
-});
+uploadZone.addEventListener('drop', (e) => { e.preventDefault(); uploadZone.classList.remove('drag'); handleFiles(e.dataTransfer.files); });
 fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
 apiToggle.addEventListener('click', () => apiSettings.classList.toggle('show'));
@@ -449,18 +432,15 @@ function getFontName() {
   return fontFamily.value === 'Custom...' ? (customFont.value || 'Iskoola Pota') : fontFamily.value;
 }
 
-/* ---------- File handling (ZIP Support) ---------- */
 async function handleFiles(fileList) {
   if (!fileList || fileList.length === 0) return;
   
   const filesArray = Array.from(fileList);
-  let loadedCount = 0;
   let acceptedCount = 0;
 
   for (const f of filesArray) {
     const ext = f.name.split('.').pop().toLowerCase();
     
-    // Check if ZIP
     if (ext === 'zip') {
       toast('Extracting ZIP... Please wait ⏳', 'info');
       try {
@@ -468,10 +448,9 @@ async function handleFiles(fileList) {
         const zipFiles = Object.values(zip.files);
         
         for (const zipFile of zipFiles) {
-          // Filter only subtitle files
           if (!zipFile.dir && /\.(srt|ass|ssa)$/i.test(zipFile.name)) {
             if (state.files.length + acceptedCount >= 15) {
-              toast('Maximum 15 files limit reached. Skipping remaining.', 'error');
+              toast('Maximum 15 files limit reached.', 'error');
               break;
             }
             const content = await zipFile.async('text');
@@ -479,25 +458,19 @@ async function handleFiles(fileList) {
             
             state.files.push({
               id: 'file_' + Date.now() + '_' + Math.floor(Math.random() * 10000),
-              name: zipFile.name.split('/').pop(), // Keep only filename, not folder path
+              name: zipFile.name.split('/').pop(),
               ext: fileExt,
               original: content,
-              parsed: null,
-              output: null,
-              status: 'pending',
-              progress: 0,
-              error: null,
+              parsed: null, output: null, status: 'pending', progress: 0, error: null,
             });
             acceptedCount++;
           }
         }
         toast(`✅ ZIP Extracted. ${acceptedCount} files found.`, 'success');
       } catch (err) {
-        console.error("ZIP Read Error:", err);
         toast('Error reading ZIP file: ' + f.name, 'error');
       }
     } 
-    // Check if regular subtitle file
     else if (['srt', 'ass', 'ssa'].includes(ext)) {
       if (state.files.length + acceptedCount >= 15) {
         toast('Maximum 15 files allowed', 'error');
@@ -506,14 +479,8 @@ async function handleFiles(fileList) {
       const content = await f.text();
       state.files.push({
         id: 'file_' + Date.now() + '_' + Math.floor(Math.random() * 10000),
-        name: f.name,
-        ext: ext,
-        original: content,
-        parsed: null,
-        output: null,
-        status: 'pending',
-        progress: 0,
-        error: null,
+        name: f.name, ext: ext, original: content,
+        parsed: null, output: null, status: 'pending', progress: 0, error: null,
       });
       acceptedCount++;
     }
@@ -524,14 +491,11 @@ async function handleFiles(fileList) {
     filesCard.style.display = 'block';
     fileInput.value = '';
     setTimeout(() => filesCard.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-  } else if (filesArray.length > 0) {
-    toast('No valid .srt, .ass, .ssa or .zip files found', 'error');
   }
 }
 
-/* ---------- Render files ---------- */
 function renderFiles() {
-  filesCount.textContent = `${state.files.length} file${state.files.length !== 1 ? 's' : ''}`;
+  filesCount.textContent = `${state.files.length} files`;
   filesList.innerHTML = '';
   state.files.forEach(f => {
     const item = document.createElement('div');
@@ -551,6 +515,7 @@ function renderFiles() {
           <span>${statusLabel(f.status)}</span>
         </div>
         <div class="progress-bar"><div class="progress-fill" style="width:${f.progress}%"></div></div>
+        ${f.status === 'error' ? `<span class="error-text">${escapeHTML(f.error)}</span>` : ''}
       </div>
       <div class="file-actions">
         ${f.status === 'done'
@@ -567,18 +532,13 @@ function renderFiles() {
   translateBtn.disabled = state.translating || state.files.length === 0;
   translateBtn.innerHTML = state.translating
     ? `<svg class="spin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20" stroke-width="2"/></svg> Translating...`
-    : `<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg> Translate All`;
+    : `<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg> Translate All (පරිවර්තනය කරන්න)`;
 }
 
 function statusLabel(s) {
   return { pending: 'Ready', parsing: 'Parsing…', translating: 'Translating…', done: '✅ Done', error: '❌ Error' }[s] || s;
 }
-
-function escapeHTML(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
+function escapeHTML(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
 filesList.addEventListener('click', (e) => {
   const btn = e.target.closest('[data-action]');
@@ -596,10 +556,7 @@ filesList.addEventListener('click', (e) => {
   }
 });
 
-/* =========================================================
-   PARSERS
-   ========================================================= */
-
+/* PARSERS */
 function parseSRT(content) {
   const norm = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
   const rawBlocks = norm.split(/\n{2,}/).filter(b => b.trim());
@@ -632,12 +589,9 @@ function parseASS(content) {
   return { type: 'ass', lines, dialogues };
 }
 
-/* =========================================================
-   TAG PROTECTION
-   ========================================================= */
+/* PROTECT TAGS */
 const TAG_START = '\u2063'; 
 const TAG_END = '\u2063';
-
 function protectText(text) {
   const tags = [];
   const protectedText = text.replace(/\{[^}]*\}/g, (m) => {
@@ -651,10 +605,7 @@ function restoreText(text, tags) {
   return text.replace(/\u2063T(\d+)\u2063/g, (_, i) => tags[+i] ?? '');
 }
 
-/* =========================================================
-   TRANSLATION
-   ========================================================= */
-
+/* TRANSLATION */
 async function translateAll(texts, opts, onProgress) {
   const chunks = [];
   for (let i = 0; i < texts.length; i += CHUNK_SIZE) {
@@ -670,6 +621,8 @@ async function translateAll(texts, opts, onProgress) {
       const chunk = chunks[ci];
       let attempt = 0;
       let success = false;
+      let lastError = null;
+
       while (attempt < 3 && !success) {
         try {
           const translated = await translateChunk(chunk.items, opts);
@@ -680,19 +633,15 @@ async function translateAll(texts, opts, onProgress) {
           onProgress?.(done, texts.length);
           success = true;
         } catch (e) {
+          lastError = e;
           attempt++;
-          if (attempt >= 3) {
-            for (let k = 0; k < chunk.items.length; k++) {
-              results[chunk.start + k] = chunk.items[k];
-            }
-            done += chunk.items.length;
-            onProgress?.(done, texts.length);
-            console.warn('Chunk failed after retries:', e);
-            success = true;
-          } else {
-            await new Promise(r => setTimeout(r, 800 * attempt));
-          }
+          if (attempt < 3) await new Promise(r => setTimeout(r, 1000 * attempt));
         }
+      }
+      
+      // දැන් අවුලක් ආවොත් සයිලන්ට් වෙන්නේ නැතුව Error එක උඩට යවනවා
+      if (!success) {
+        throw new Error(lastError.message || 'Translation failed after 3 attempts');
       }
     }
   }
@@ -735,8 +684,21 @@ ${JSON.stringify(items)}`
 
   if (!res.ok) {
     const t = await res.text();
-    throw new Error(`API ${res.status}: ${t.slice(0, 200)}`);
+    let errMsg = `API Error ${res.status}`;
+    try {
+        const parsedErr = JSON.parse(t);
+        if (parsedErr.error && parsedErr.error.message) {
+            errMsg = parsedErr.error.message;
+        }
+    } catch(_) { errMsg = t.slice(0, 100); }
+    
+    // අපිට තේරෙන විදිහට Error එක හදමු
+    if (errMsg.includes('credits')) errMsg = 'API Credits ඉවරයි! කරුණාකර OpenRouter එකට ගිහින් credits මිලදී ගන්න.';
+    if (errMsg.includes('invalid api key')) errMsg = 'API Key එක වැරදියි! කරුණාකර ආයේ චෙක් කරන්න.';
+    
+    throw new Error(errMsg);
   }
+  
   const data = await res.json();
   let content = (data?.choices?.[0]?.message?.content || '').trim();
   content = content.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
@@ -748,39 +710,17 @@ ${JSON.stringify(items)}`
   }
 
   if (!Array.isArray(parsed) || parsed.length !== items.length) {
-    throw new Error(`Bad response (expected ${items.length}, got ${parsed?.length ?? 'none'})`);
+    throw new Error(`AI එකෙන් වැරදි පිළිතුරක් ආවා. (Expected ${items.length} lines, got ${parsed?.length ?? '0'})`);
   }
   return parsed.map(x => typeof x === 'string' ? x : String(x));
 }
 
-/* =========================================================
-   APPLY FONT + WATERMARK
-   ========================================================= */
-
+/* FONT OVERRIDE LOGIC */
 function applyFontSRT(text, font, size) {
   if (!text) return text;
   const override = `{\\fn${font}\\fs${size}}`;
   return text.split('\n').map(l => l.trim() ? override + l : l).join('\n');
 }
-
-function applyFontASS(assObj, font, size) {
-  const lines = assObj.lines.map(line => {
-    if (line.startsWith('Style:')) {
-      const parts = line.split(',');
-      if (parts.length >= 3) {
-        parts[1] = font;
-        parts[2] = String(size);
-        return parts.join(',');
-      }
-    }
-    return line;
-  });
-  return { ...assObj, lines };
-}
-
-/* =========================================================
-   FILE TRANSLATION PIPELINE
-   ========================================================= */
 
 async function translateFile(file, opts) {
   const font = opts.font;
@@ -802,9 +742,7 @@ async function translateFile(file, opts) {
       }
     });
 
-    file.status = 'translating';
-    file.progress = 0;
-    renderFiles();
+    file.status = 'translating'; file.progress = 0; renderFiles();
 
     const translated = await translateAll(toTranslate, opts, (done, total) => {
       file.progress = Math.min(99, Math.round((done / total) * 100));
@@ -818,15 +756,12 @@ async function translateFile(file, opts) {
 
     if (wmInt > 0) {
       blocks.forEach((b, i) => {
-        if ((i + 1) % wmInt === 0 && b.text.trim()) {
-          b.text += '\n' + SRT_WM;
-        }
+        if ((i + 1) % wmInt === 0 && b.text.trim()) b.text += '\n' + SRT_WM;
       });
     }
 
     file.output = serializeSRT(blocks);
-    file.progress = 100;
-    file.status = 'done';
+    file.progress = 100; file.status = 'done';
     return;
   }
 
@@ -845,9 +780,7 @@ async function translateFile(file, opts) {
       }
     });
 
-    file.status = 'translating';
-    file.progress = 0;
-    renderFiles();
+    file.status = 'translating'; file.progress = 0; renderFiles();
 
     const translated = await translateAll(toTranslate, opts, (done, total) => {
       file.progress = Math.min(99, Math.round((done / total) * 100));
@@ -856,27 +789,24 @@ async function translateFile(file, opts) {
 
     meta.forEach((m, k) => {
       const restored = restoreText(translated[k], m.tags);
-      ass.dialogues[m.dIdx].text = restored;
+      // ASS එකේ ෆොන්ට් එක වෙනස් කරන්න කෙලින්ම ලයින් එකට ටැග් එක දානවා
+      const fontTag = `{\\fn${font}\\fs${size}}`;
+      ass.dialogues[m.dIdx].text = fontTag + restored;
     });
 
     if (wmInt > 0) {
       ass.dialogues.forEach((d, i) => {
-        if ((i + 1) % wmInt === 0 && d.text.trim()) {
-          d.text += '\\N' + ASS_WM;
-        }
+        if ((i + 1) % wmInt === 0 && d.text.trim()) d.text += '\\N' + ASS_WM;
       });
     }
 
-    const updated = applyFontASS(ass, font, size);
-
-    const newLines = updated.lines.slice();
+    const newLines = ass.lines.slice();
     ass.dialogues.forEach((d) => {
       newLines[d.lineIndex] = 'Dialogue: ' + d.prefix + ',' + d.text;
     });
 
     file.output = newLines.join('\n');
-    file.progress = 100;
-    file.status = 'done';
+    file.progress = 100; file.status = 'done';
     return;
   }
 
@@ -893,21 +823,15 @@ function updateFileProgress(id, pct) {
 }
 
 function serializeSRT(blocks) {
-  return blocks.map((b, i) => {
-    return `${i + 1}\n${b.time}\n${b.text}`;
-  }).join('\n\n') + '\n';
+  return blocks.map((b, i) => `${i + 1}\n${b.time}\n${b.text}`).join('\n\n') + '\n';
 }
-
-/* =========================================================
-   TRANSLATE ALL (main action)
-   ========================================================= */
 
 translateBtn.addEventListener('click', async () => {
   if (state.translating) return;
   
   const apiKey = apiKeyInput.value.trim();
   if (!apiKey) {
-    toast('Please enter and save your OpenRouter API key first', 'error');
+    toast('කරුණාකර පළමුව API Key එක ඇතුලත් කරන්න', 'error');
     apiSettings.classList.add('show');
     apiKeyInput.focus();
     return;
@@ -915,7 +839,7 @@ translateBtn.addEventListener('click', async () => {
   
   const pending = state.files.filter(f => f.status !== 'done');
   if (!pending.length) {
-    toast('All files are already translated', 'error');
+    toast('සියලුම ෆයිල්ස් දැනටමත් පරිවර්තනය කර ඇත', 'error');
     return;
   }
 
@@ -957,10 +881,6 @@ translateBtn.addEventListener('click', async () => {
   else if (ok && fail) toast(`Done: ${ok} · Failed: ${fail}`, 'error');
 });
 
-/* =========================================================
-   DOWNLOAD
-   ========================================================= */
-
 function downloadFile(file) {
   if (!file.output) return;
   const baseName = file.name.replace(/\.(srt|ass|ssa)$/i, '');
@@ -976,12 +896,10 @@ function downloadFile(file) {
   setTimeout(() => URL.revokeObjectURL(url), 1500);
 }
 
-// ZIP එකක් විදිහට ඔක්කොම ඩවුන්ලෝඩ් කරන ලොජික් එක
 downloadAllBtn.addEventListener('click', async () => {
   const doneFiles = state.files.filter(f => f.status === 'done');
   if (!doneFiles.length) return;
 
-  // එකක් විතරක් තියෙනවා නම් සාමාන්‍ය විදිහට ඩවුන්ලෝඩ් කරනවා
   if (doneFiles.length === 1) {
     downloadFile(doneFiles[0]);
     return;
@@ -998,7 +916,6 @@ downloadAllBtn.addEventListener('click', async () => {
     });
 
     const content = await zip.generateAsync({ type: "blob" });
-    // FileSaver.js පාවිච්චි කරලා ඩවුන්ලෝඩ් කරනවා
     saveAs(content, "DG_Translated_Subtitles.zip");
     toast('✅ ZIP Download Started!', 'success');
   } catch (err) {
@@ -1007,7 +924,6 @@ downloadAllBtn.addEventListener('click', async () => {
   }
 });
 
-/* ---------- Init ---------- */
 renderFiles();
 </script>
 </body>
