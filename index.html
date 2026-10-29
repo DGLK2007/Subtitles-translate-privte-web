@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DG Subtitles Translate — English → Sinhala</title>
+<!-- ZIP ෆයිල් හදන්න සහ එළියට ගන්න ලයිබ්‍රරි දෙක -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <style>
   :root{
     --bg:#070a12; --bg2:#0d1220; --panel:#111827; --panel2:#1a2332;
@@ -87,6 +90,7 @@
     background:rgba(139,92,246,.15);color:var(--accent3);
     border:1px solid rgba(139,92,246,.25);
   }
+  .tag.zip{background:rgba(245,158,11,.15);color:var(--yellow);border-color:rgba(245,158,11,.25);}
 
   /* Options grid */
   .options{
@@ -209,6 +213,7 @@
   }
   .toast.success{border-color:rgba(16,185,129,.5);color:var(--green)}
   .toast.error{border-color:rgba(239,68,68,.5);color:var(--red)}
+  .toast.info{border-color:rgba(99,102,241,.5);color:var(--accent3)}
   @keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
 
   @media (max-width:640px){
@@ -217,8 +222,8 @@
     .upload-zone{padding:32px 16px}
     .options{grid-template-columns:1fr}
     .btn{min-width:100%}
-    .api-input-group { flex-direction: column; }
-    .btn-save-key { padding: 12px; }
+    .api-input-group { flex-direction:column; }
+    .btn-save-key { padding:12px; }
   }
 </style>
 </head>
@@ -236,7 +241,6 @@
     <p>Powered by AI · Made for <a href="https://dgsubz.netlify.app" target="_blank" rel="noopener">dgsubz.netlify.app</a></p>
   </header>
 
-  <!-- Upload & Settings -->
   <div class="card">
     <div class="upload-zone" id="uploadZone">
       <div class="upload-icon">
@@ -246,15 +250,16 @@
           <line x1="12" y1="3" x2="12" y2="15"/>
         </svg>
       </div>
-      <h3>Drop subtitle files or click to browse</h3>
+      <h3>Drop .ZIP file or subtitle files</h3>
       <p>Translate up to 15 subtitle files at once</p>
       <div class="formats">
+        <span class="tag zip">.ZIP</span>
         <span class="tag">.SRT</span>
         <span class="tag">.ASS</span>
         <span class="tag">.SSA</span>
       </div>
     </div>
-    <input type="file" id="fileInput" multiple accept=".srt,.ass,.ssa" style="display:none">
+    <input type="file" id="fileInput" multiple accept=".srt,.ass,.ssa,.zip" style="display:none">
 
     <div class="options">
       <div class="field">
@@ -324,7 +329,7 @@
       </button>
       <button class="btn btn-secondary" id="downloadAllBtn" disabled>
         <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Download All
+        Download All (.zip)
       </button>
     </div>
   </div>
@@ -444,65 +449,84 @@ function getFontName() {
   return fontFamily.value === 'Custom...' ? (customFont.value || 'Iskoola Pota') : fontFamily.value;
 }
 
-/* ---------- File handling (FIXED) ---------- */
-function handleFiles(fileList) {
-  const incoming = Array.from(fileList).filter(f => /\.(srt|ass|ssa)$/i.test(f.name));
-  if (!incoming.length) {
-    toast('Please upload .srt, .ass or .ssa files', 'error');
-    return;
-  }
-  const room = 15 - state.files.length;
-  if (room <= 0) {
-    toast('Maximum 15 files allowed', 'error');
-    return;
-  }
-  const accepted = incoming.slice(0, room);
-  if (incoming.length > room) toast(`Only ${room} more file(s) added (15 max)`, 'error');
+/* ---------- File handling (ZIP Support) ---------- */
+async function handleFiles(fileList) {
+  if (!fileList || fileList.length === 0) return;
+  
+  const filesArray = Array.from(fileList);
+  let loadedCount = 0;
+  let acceptedCount = 0;
 
-  let loaded = 0;
-  accepted.forEach(f => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
+  for (const f of filesArray) {
+    const ext = f.name.split('.').pop().toLowerCase();
+    
+    // Check if ZIP
+    if (ext === 'zip') {
+      toast('Extracting ZIP... Please wait ⏳', 'info');
       try {
-        const ext = f.name.split('.').pop().toLowerCase();
-        // crypto.randomUUID() වෙනුවට සාමාන්‍ය ID එකක් යොදා ඇත (මොබයිල් එරර් එක මගහරවන්න)
-        const fileId = 'file_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+        const zip = await JSZip.loadAsync(f);
+        const zipFiles = Object.values(zip.files);
         
-        state.files.push({
-          id: fileId,
-          name: f.name,
-          ext,
-          original: e.target.result,
-          parsed: null,
-          output: null,
-          status: 'pending',
-          progress: 0,
-          error: null,
-        });
+        for (const zipFile of zipFiles) {
+          // Filter only subtitle files
+          if (!zipFile.dir && /\.(srt|ass|ssa)$/i.test(zipFile.name)) {
+            if (state.files.length + acceptedCount >= 15) {
+              toast('Maximum 15 files limit reached. Skipping remaining.', 'error');
+              break;
+            }
+            const content = await zipFile.async('text');
+            const fileExt = zipFile.name.split('.').pop().toLowerCase();
+            
+            state.files.push({
+              id: 'file_' + Date.now() + '_' + Math.floor(Math.random() * 10000),
+              name: zipFile.name.split('/').pop(), // Keep only filename, not folder path
+              ext: fileExt,
+              original: content,
+              parsed: null,
+              output: null,
+              status: 'pending',
+              progress: 0,
+              error: null,
+            });
+            acceptedCount++;
+          }
+        }
+        toast(`✅ ZIP Extracted. ${acceptedCount} files found.`, 'success');
       } catch (err) {
-        console.error("File read error:", err);
-        toast('Error reading file: ' + f.name, 'error');
+        console.error("ZIP Read Error:", err);
+        toast('Error reading ZIP file: ' + f.name, 'error');
       }
-      
-      loaded++;
-      if (loaded === accepted.length) {
-        renderFiles();
-        filesCard.style.display = 'block'; // ෆයිල් ටික ආවම කාඩ් එක පෙන්වයි
-        fileInput.value = '';
-        // ෆයිල් ලිස්ට් එක තියෙන තැනට ස්ක්‍රෝල් වෙයි
-        setTimeout(() => filesCard.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    } 
+    // Check if regular subtitle file
+    else if (['srt', 'ass', 'ssa'].includes(ext)) {
+      if (state.files.length + acceptedCount >= 15) {
+        toast('Maximum 15 files allowed', 'error');
+        break;
       }
-    };
-    reader.onerror = () => {
-      toast('Failed to read file: ' + f.name, 'error');
-      loaded++;
-      if (loaded === accepted.length) {
-        renderFiles();
-        filesCard.style.display = 'block';
-      }
-    };
-    reader.readAsText(f, 'utf-8');
-  });
+      const content = await f.text();
+      state.files.push({
+        id: 'file_' + Date.now() + '_' + Math.floor(Math.random() * 10000),
+        name: f.name,
+        ext: ext,
+        original: content,
+        parsed: null,
+        output: null,
+        status: 'pending',
+        progress: 0,
+        error: null,
+      });
+      acceptedCount++;
+    }
+  }
+
+  if (acceptedCount > 0) {
+    renderFiles();
+    filesCard.style.display = 'block';
+    fileInput.value = '';
+    setTimeout(() => filesCard.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  } else if (filesArray.length > 0) {
+    toast('No valid .srt, .ass, .ssa or .zip files found', 'error');
+  }
 }
 
 /* ---------- Render files ---------- */
@@ -952,11 +976,35 @@ function downloadFile(file) {
   setTimeout(() => URL.revokeObjectURL(url), 1500);
 }
 
-downloadAllBtn.addEventListener('click', () => {
-  const done = state.files.filter(f => f.status === 'done');
-  if (!done.length) return;
-  done.forEach((f, i) => setTimeout(() => downloadFile(f), i * 350));
-  toast(`⬇️ Downloading ${done.length} file(s)...`, 'success');
+// ZIP එකක් විදිහට ඔක්කොම ඩවුන්ලෝඩ් කරන ලොජික් එක
+downloadAllBtn.addEventListener('click', async () => {
+  const doneFiles = state.files.filter(f => f.status === 'done');
+  if (!doneFiles.length) return;
+
+  // එකක් විතරක් තියෙනවා නම් සාමාන්‍ය විදිහට ඩවුන්ලෝඩ් කරනවා
+  if (doneFiles.length === 1) {
+    downloadFile(doneFiles[0]);
+    return;
+  }
+
+  toast(`Packaging ${doneFiles.length} files into ZIP...`, 'info');
+  
+  try {
+    const zip = new JSZip();
+    doneFiles.forEach(f => {
+      const baseName = f.name.replace(/\.(srt|ass|ssa)$/i, '');
+      const suffix = f.ext === 'srt' ? '.si.srt' : '.si.ass';
+      zip.file(baseName + suffix, f.output);
+    });
+
+    const content = await zip.generateAsync({ type: "blob" });
+    // FileSaver.js පාවිච්චි කරලා ඩවුන්ලෝඩ් කරනවා
+    saveAs(content, "DG_Translated_Subtitles.zip");
+    toast('✅ ZIP Download Started!', 'success');
+  } catch (err) {
+    console.error("ZIP Create Error:", err);
+    toast('Error creating ZIP file', 'error');
+  }
 });
 
 /* ---------- Init ---------- */
