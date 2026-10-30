@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DG SUBZ Pro | AI Subtitle Translator</title>
+<title>DG SUBZ Pro | Gemini AI Subtitle Translator</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -188,9 +188,9 @@ input[type="color"]::-webkit-color-swatch{border:none;border-radius:6px;}
 <!-- HOME -->
 <section id="page-home" class="page active">
     <div class="hero">
-        <div class="hero-badge"><span class="dot"></span> Powered by OpenRouter AI</div>
+        <div class="hero-badge"><span class="dot"></span> Powered by Google Gemini AI</div>
         <h1 class="hero-title">DG SUBZ PRO</h1>
-        <p class="hero-sub">Translate subtitles into <b>Natural Spoken Sinhala</b> (කතා කරන භාෂාව) using your own <b>OpenRouter API key</b>.</p>
+        <p class="hero-sub">Translate subtitles into <b>Natural Spoken Sinhala</b> (කතා කරන භාෂාව) using your own <b>Google Gemini API key</b>.</p>
         <div class="hero-actions">
             <button class="btn-primary" onclick="showPage('translator')"><i class="fa-solid fa-language"></i> Start Translating</button>
             <button class="btn-outline" onclick="showPage('settings')"><i class="fa-solid fa-key"></i> API Settings</button>
@@ -289,17 +289,17 @@ input[type="color"]::-webkit-color-swatch{border:none;border-radius:6px;}
     <div class="container">
         <div class="section-header">
             <div class="section-header-icon"><i class="fa-solid fa-gear"></i></div>
-            <div><h2>API Settings</h2><p>Configure OpenRouter + speed</p></div>
+            <div><h2>API Settings</h2><p>Configure Google Gemini API</p></div>
         </div>
 
         <div class="form-group">
             <label><i class="fa-solid fa-rocket"></i> Speed Preset</label>
             <div class="preset-row">
                 <div class="preset" data-preset="ultra" onclick="applyPreset('ultra')">
-                    <div class="preset-emoji">🚀</div><div class="preset-name">Ultra Fast</div><div class="preset-desc">5 parallel · batch 40</div>
+                    <div class="preset-emoji">🚀</div><div class="preset-name">Ultra Fast</div><div class="preset-desc">6 parallel · batch 40</div>
                 </div>
                 <div class="preset active" data-preset="balanced" onclick="applyPreset('balanced')">
-                    <div class="preset-emoji">⚖️</div><div class="preset-name">Balanced</div><div class="preset-desc">3 parallel · batch 30</div>
+                    <div class="preset-emoji">⚖️</div><div class="preset-name">Balanced</div><div class="preset-desc">4 parallel · batch 30</div>
                 </div>
                 <div class="preset" data-preset="quality" onclick="applyPreset('quality')">
                     <div class="preset-emoji">🎯</div><div class="preset-name">Safe</div><div class="preset-desc">2 parallel · batch 20</div>
@@ -308,26 +308,9 @@ input[type="color"]::-webkit-color-swatch{border:none;border-radius:6px;}
         </div>
 
         <div class="form-group">
-            <label><i class="fa-solid fa-key"></i> OpenRouter API Key</label>
-            <input type="password" id="apiKeyInput" placeholder="sk-or-v1-..." autocomplete="off">
-            <div class="hint"><i class="fa-solid fa-lock"></i> Stored in your browser. Get a key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a></div>
-        </div>
-
-        <div class="form-group">
-            <label><i class="fa-solid fa-brain"></i> AI Model (Choose a Free Model ⭐)</label>
-            <select id="modelSelect" onchange="toggleCustomModel()">
-                <option value="google/gemini-3.5-flash:free" selected>Google Gemini 3.5 Flash (FREE ⭐ Fastest)</option>
-                <option value="meta-llama/llama-3.3-70b-instruct:free">Meta Llama 3.3 70B (FREE)</option>
-                <option value="qwen/qwen3-14b:free">Qwen 3 14B (FREE)</option>
-                <option value="google/gemma-4-26b-a4b-it:free">Google Gemma 4 26B (FREE)</option>
-                <option value="google/gemini-flash-1.5:free">Google Gemini 1.5 Flash (FREE)</option>
-                <option value="meta-llama/llama-3.1-8b-instruct:free">Meta Llama 3.1 8B (FREE)</option>
-                <option value="google/gemini-2.0-flash-001">Google Gemini 2.0 Flash (PAID - Needs Credits)</option>
-                <option value="openai/gpt-4o-mini">OpenAI GPT-4o Mini (PAID)</option>
-                <option value="__custom__">Custom Model ID...</option>
-            </select>
-            <input type="text" id="customModelInput" placeholder="e.g. model/name:free" style="display:none;margin-top:10px;">
-            <div class="hint" style="color:var(--warn);margin-top:8px;"><i class="fa-solid fa-circle-exclamation"></i> <b>ඔයාගේ account එකේ credits නැත්නම් අනිවාර්යයෙන් :free තියෙන model එකක් තෝරන්න.</b></div>
+            <label><i class="fa-solid fa-key"></i> Google Gemini API Key</label>
+            <input type="password" id="apiKeyInput" placeholder="AQ.Ab8RN..." autocomplete="off">
+            <div class="hint"><i class="fa-solid fa-lock"></i> Stored in your browser. Get a key at <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a></div>
         </div>
 
         <div class="grid-2">
@@ -338,6 +321,7 @@ input[type="color"]::-webkit-color-swatch{border:none;border-radius:6px;}
                     <option value="20">20 — Safe</option>
                     <option value="30" selected>30 — Balanced</option>
                     <option value="40">40 — Fast</option>
+                    <option value="50">50 — Ultra</option>
                 </select>
             </div>
             <div class="form-group">
@@ -345,8 +329,9 @@ input[type="color"]::-webkit-color-swatch{border:none;border-radius:6px;}
                 <select id="concurrency">
                     <option value="1">1 — Safe</option>
                     <option value="2">2 — Good</option>
-                    <option value="3" selected>3 — Fast ⭐</option>
-                    <option value="5">5 — Ultra</option>
+                    <option value="3">3 — Fast</option>
+                    <option value="4" selected>4 — Faster ⭐</option>
+                    <option value="6">6 — Ultra</option>
                 </select>
             </div>
         </div>
@@ -397,11 +382,11 @@ function toast(msg, type){
 }
 
 /* ==================== SETTINGS ==================== */
-const DEFAULT_SETTINGS = { apiKey:'', model:'google/gemini-3.5-flash:free', customModel:'', batchSize:30, concurrency:3, preset:'balanced' };
+const DEFAULT_SETTINGS = { apiKey:'', batchSize:30, concurrency:4, preset:'balanced' };
 const PRESETS = {
-    ultra:    { model:'google/gemini-3.5-flash:free', batchSize:40, concurrency:5 },
-    balanced: { model:'google/gemini-3.5-flash:free', batchSize:30, concurrency:3 },
-    quality:  { model:'google/gemini-3.5-flash:free', batchSize:20, concurrency:2 }
+    ultra:    { batchSize:40, concurrency:6 },
+    balanced: { batchSize:30, concurrency:4 },
+    quality:  { batchSize:20, concurrency:2 }
 };
 let SETTINGS = { ...DEFAULT_SETTINGS };
 
@@ -414,85 +399,77 @@ function loadSettings(){
     document.getElementById('batchSize').value = String(SETTINGS.batchSize);
     document.getElementById('concurrency').value = String(SETTINGS.concurrency);
 
-    const sel = document.getElementById('modelSelect');
-    const known = Array.from(sel.options).some(o=>o.value === SETTINGS.model);
-    if(known){ sel.value = SETTINGS.model; }
-    else { sel.value = '__custom__'; document.getElementById('customModelInput').value = SETTINGS.customModel || SETTINGS.model; }
-    toggleCustomModel();
-
     document.querySelectorAll('.preset').forEach(p=>p.classList.toggle('active', p.dataset.preset === SETTINGS.preset));
     refreshKeyWarning();
 }
-function toggleCustomModel(){
-    const sel = document.getElementById('modelSelect');
-    document.getElementById('customModelInput').style.display = sel.value === '__custom__' ? 'block' : 'none';
-}
+
 function applyPreset(name){
     const p = PRESETS[name];
     if(!p) return;
-    document.getElementById('modelSelect').value = p.model;
     document.getElementById('batchSize').value = String(p.batchSize);
     document.getElementById('concurrency').value = String(p.concurrency);
     document.querySelectorAll('.preset').forEach(el=>el.classList.toggle('active', el.dataset.preset === name));
     saveSettings();
 }
+
 function saveSettings(){
     const apiKey = document.getElementById('apiKeyInput').value.trim();
-    const sel = document.getElementById('modelSelect').value;
-    const customModel = document.getElementById('customModelInput').value.trim();
-    const model = sel === '__custom__' ? (customModel || 'google/gemini-3.5-flash:free') : sel;
     const batchSize = parseInt(document.getElementById('batchSize').value, 10) || 30;
-    const concurrency = parseInt(document.getElementById('concurrency').value, 10) || 3;
+    const concurrency = parseInt(document.getElementById('concurrency').value, 10) || 4;
     const activePreset = document.querySelector('.preset.active');
     
-    SETTINGS = { apiKey, model, customModel, batchSize, concurrency, preset: activePreset ? activePreset.dataset.preset : 'balanced' };
+    SETTINGS = { apiKey, batchSize, concurrency, preset: activePreset ? activePreset.dataset.preset : 'balanced' };
     try{
         localStorage.setItem('dgsubz-settings', JSON.stringify(SETTINGS));
         toast('Settings saved ✅', 'success');
     }catch(e){ toast('Failed to save', 'error'); }
     refreshKeyWarning();
 }
+
 function refreshKeyWarning(){
     const w = document.getElementById('keyWarning');
     if(w) w.style.display = SETTINGS.apiKey ? 'none' : 'block';
 }
-function getActiveModel(){
-    const sel = document.getElementById('modelSelect').value;
-    return sel === '__custom__' ? (document.getElementById('customModelInput').value.trim() || SETTINGS.customModel) : sel;
-}
 
 async function testConnection(){
     const apiKey = document.getElementById('apiKeyInput').value.trim();
-    const model = getActiveModel();
     const out = document.getElementById('testResult');
-    if(!apiKey || !model){ out.innerHTML = '<div class="status err"><i class="fa-solid fa-xmark"></i> API key & model required</div>'; return; }
+    if(!apiKey){ out.innerHTML = '<div class="status err"><i class="fa-solid fa-xmark"></i> API key required</div>'; return; }
     
-    out.innerHTML = '<div class="status warn"><i class="fa-solid fa-spinner fa-spin"></i> Testing connection...</div>';
+    out.innerHTML = '<div class="status warn"><i class="fa-solid fa-spinner fa-spin"></i> Testing Gemini API...</div>';
     try{
-        const reply = await callOpenRouter(apiKey, model, 'Reply with ONLY the word: Hello', 'Test', 0.2, 30);
+        const reply = await callGeminiAPI(apiKey, 'Reply with ONLY the word: Hello', 'Test', 0.2, 30);
         out.innerHTML = `<div class="status ok"><i class="fa-solid fa-check"></i> Connected — "${reply.trim().slice(0,60)}"</div>`;
     }catch(e){
         out.innerHTML = `<div class="status err"><i class="fa-solid fa-xmark"></i> ${(e.message||'Failed').replace(/</g,'&lt;')}</div>`;
     }
 }
 
-/* ==================== API CALL ==================== */
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
+/* ==================== GOOGLE GEMINI API CALL ==================== */
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent';
 
-async function callOpenRouter(apiKey, model, systemPrompt, userPrompt, temperature, maxTokens){
+async function callGeminiAPI(apiKey, systemPrompt, userPrompt, temperature, maxTokens){
     const body = {
-        model, messages:[{ role:'system', content:systemPrompt }, { role:'user', content:userPrompt }],
-        temperature: temperature !== undefined ? temperature : 0.3, max_tokens: maxTokens || 4000
+        contents: [{ role: "user", parts: [{ text: userPrompt }] }],
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        generationConfig: {
+            temperature: temperature !== undefined ? temperature : 0.3,
+            maxOutputTokens: maxTokens || 4000
+        }
     };
 
     const ctrl = new AbortController();
     const timeout = setTimeout(()=>ctrl.abort(), 45000); // 45s timeout
 
     try {
-        const resp = await fetch(OPENROUTER_URL, {
+        const resp = await fetch(GEMINI_URL, {
             method:'POST',
-            headers:{ 'Authorization':`Bearer ${apiKey}`, 'Content-Type':'application/json', 'HTTP-Referer': location.href, 'X-Title':'DG SUBZ Pro' },
-            body: JSON.stringify(body), signal: ctrl.signal
+            headers:{ 
+                'Content-Type': 'application/json',
+                'X-goog-api-key': apiKey
+            },
+            body: JSON.stringify(body), 
+            signal: ctrl.signal
         });
         clearTimeout(timeout);
 
@@ -501,15 +478,15 @@ async function callOpenRouter(apiKey, model, systemPrompt, userPrompt, temperatu
             let msg = txt;
             try { const j = JSON.parse(txt); msg = j.error?.message || JSON.stringify(j.error) || txt; } catch(e){}
             
-            if (resp.status === 402) throw new Error('Insufficient Credits (402). Use a :free model.');
-            if (resp.status === 401) throw new Error('Invalid API Key (401).');
             if (resp.status === 429) throw new Error('Rate Limit Exceeded (429). Try lowering Parallel Workers.');
+            if (resp.status === 400) throw new Error('Bad Request (400): ' + msg.slice(0, 100));
+            if (resp.status === 403) throw new Error('Forbidden (403). Check your API Key.');
             throw new Error(`API Error ${resp.status}: ${msg.slice(0,100)}`);
         }
 
         const data = await resp.json();
-        const txt = data.choices?.[0]?.message?.content;
-        if(!txt) throw new Error('Empty response from AI');
+        const txt = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if(!txt) throw new Error('Empty response from Gemini');
         return txt;
 
     } catch(err) {
@@ -664,9 +641,8 @@ async function startTranslation(){
     statTime.textContent = '~0s left';
 
     const apiKey = SETTINGS.apiKey;
-    const model = getActiveModel();
     const batchSize = SETTINGS.batchSize || 30;
-    const concurrency = SETTINGS.concurrency || 3;
+    const concurrency = SETTINGS.concurrency || 4;
     const isBold = fontStyle === 'bold';
     const isItalic = fontStyle === 'italic';
     const startedAt = Date.now();
@@ -745,11 +721,11 @@ async function startTranslation(){
 
         async function translateBatch(texts){
             try {
-                const resp = await callOpenRouter(apiKey, model, systemPrompt, buildUserPrompt(texts, targetLang), 0.3, 4000);
+                const resp = await callGeminiAPI(apiKey, systemPrompt, buildUserPrompt(texts, targetLang), 0.3, 4000);
                 const parsed = parseNumberedResponse(resp, texts.length);
                 if(parsed) return parsed;
             } catch(e) {
-                if (e.message.includes('API Error') || e.message.includes('Credits') || e.message.includes('Rate Limit') || e.message.includes('API Key')) {
+                if (e.message.includes('API Error') || e.message.includes('Rate Limit') || e.message.includes('Forbidden')) {
                     throw e; 
                 }
                 console.warn('Parsing failed, splitting:', e.message);
@@ -757,11 +733,11 @@ async function startTranslation(){
 
             if(texts.length === 1){
                 try {
-                    const resp = await callOpenRouter(apiKey, model, buildSystemPrompt(targetLang) + '\nReturn ONLY the translation.', texts[0], 0.3, 300);
+                    const resp = await callGeminiAPI(apiKey, buildSystemPrompt(targetLang) + '\nReturn ONLY the translation.', texts[0], 0.3, 300);
                     const clean = (resp||'').trim().replace(/^\d+[\.\)]\s*/,'').replace(/^"|"$/g,'');
                     if(clean) return [clean];
                 } catch(e) { 
-                    if (e.message.includes('API Error') || e.message.includes('Credits') || e.message.includes('Rate Limit')) throw e;
+                    if (e.message.includes('API Error') || e.message.includes('Rate Limit')) throw e;
                 }
                 return [texts[0]];
             }
