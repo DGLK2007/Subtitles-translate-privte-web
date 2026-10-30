@@ -296,7 +296,7 @@ input[type="color"]::-webkit-color-swatch{border:none;border-radius:6px;}
             <label><i class="fa-solid fa-rocket"></i> Speed Preset</label>
             <div class="preset-row">
                 <div class="preset" data-preset="ultra" onclick="applyPreset('ultra')">
-                    <div class="preset-emoji">🚀</div><div class="preset-name">Ultra Fast</div><div class="preset-desc">6 parallel · batch 40</div>
+                    <div class="preset-emoji">🚀</div><div class="preset-name">Ultra Fast</div><div class="preset-desc">5 parallel · batch 40</div>
                 </div>
                 <div class="preset active" data-preset="balanced" onclick="applyPreset('balanced')">
                     <div class="preset-emoji">⚖️</div><div class="preset-name">Balanced</div><div class="preset-desc">3 parallel · batch 30</div>
@@ -314,12 +314,14 @@ input[type="color"]::-webkit-color-swatch{border:none;border-radius:6px;}
         </div>
 
         <div class="form-group">
-            <label><i class="fa-solid fa-brain"></i> AI Model (Free Models have :free tag)</label>
+            <label><i class="fa-solid fa-brain"></i> AI Model (Choose a Free Model ⭐)</label>
             <select id="modelSelect" onchange="toggleCustomModel()">
-                <option value="google/gemini-2.0-flash-exp:free" selected>Google Gemini 2.0 Flash (FREE ⭐)</option>
-                <option value="google/gemini-flash-1.5-8b:free">Google Gemini Flash 1.5 8B (FREE)</option>
+                <option value="google/gemini-3.5-flash:free" selected>Google Gemini 3.5 Flash (FREE ⭐ Fastest)</option>
                 <option value="meta-llama/llama-3.3-70b-instruct:free">Meta Llama 3.3 70B (FREE)</option>
-                <option value="qwen/qwen-2.5-72b-instruct:free">Qwen 2.5 72B (FREE)</option>
+                <option value="qwen/qwen3-14b:free">Qwen 3 14B (FREE)</option>
+                <option value="google/gemma-4-26b-a4b-it:free">Google Gemma 4 26B (FREE)</option>
+                <option value="google/gemini-flash-1.5:free">Google Gemini 1.5 Flash (FREE)</option>
+                <option value="meta-llama/llama-3.1-8b-instruct:free">Meta Llama 3.1 8B (FREE)</option>
                 <option value="google/gemini-2.0-flash-001">Google Gemini 2.0 Flash (PAID - Needs Credits)</option>
                 <option value="openai/gpt-4o-mini">OpenAI GPT-4o Mini (PAID)</option>
                 <option value="__custom__">Custom Model ID...</option>
@@ -395,11 +397,11 @@ function toast(msg, type){
 }
 
 /* ==================== SETTINGS ==================== */
-const DEFAULT_SETTINGS = { apiKey:'', model:'google/gemini-2.0-flash-exp:free', customModel:'', batchSize:30, concurrency:3, preset:'balanced' };
+const DEFAULT_SETTINGS = { apiKey:'', model:'google/gemini-3.5-flash:free', customModel:'', batchSize:30, concurrency:3, preset:'balanced' };
 const PRESETS = {
-    ultra:    { model:'google/gemini-2.0-flash-exp:free', batchSize:40, concurrency:5 },
-    balanced: { model:'google/gemini-2.0-flash-exp:free', batchSize:30, concurrency:3 },
-    quality:  { model:'google/gemini-2.0-flash-exp:free', batchSize:20, concurrency:2 }
+    ultra:    { model:'google/gemini-3.5-flash:free', batchSize:40, concurrency:5 },
+    balanced: { model:'google/gemini-3.5-flash:free', batchSize:30, concurrency:3 },
+    quality:  { model:'google/gemini-3.5-flash:free', batchSize:20, concurrency:2 }
 };
 let SETTINGS = { ...DEFAULT_SETTINGS };
 
@@ -438,7 +440,7 @@ function saveSettings(){
     const apiKey = document.getElementById('apiKeyInput').value.trim();
     const sel = document.getElementById('modelSelect').value;
     const customModel = document.getElementById('customModelInput').value.trim();
-    const model = sel === '__custom__' ? (customModel || 'google/gemini-2.0-flash-exp:free') : sel;
+    const model = sel === '__custom__' ? (customModel || 'google/gemini-3.5-flash:free') : sel;
     const batchSize = parseInt(document.getElementById('batchSize').value, 10) || 30;
     const concurrency = parseInt(document.getElementById('concurrency').value, 10) || 3;
     const activePreset = document.querySelector('.preset.active');
@@ -499,7 +501,6 @@ async function callOpenRouter(apiKey, model, systemPrompt, userPrompt, temperatu
             let msg = txt;
             try { const j = JSON.parse(txt); msg = j.error?.message || JSON.stringify(j.error) || txt; } catch(e){}
             
-            // වැදගත්: Error එක ලස්සනට පෙන්නන්න
             if (resp.status === 402) throw new Error('Insufficient Credits (402). Use a :free model.');
             if (resp.status === 401) throw new Error('Invalid API Key (401).');
             if (resp.status === 429) throw new Error('Rate Limit Exceeded (429). Try lowering Parallel Workers.');
@@ -743,13 +744,11 @@ async function startTranslation(){
         }
 
         async function translateBatch(texts){
-            // API එකෙන් Error එකක් ආවොත් කෙලින්ම ඒක අල්ලගන්නවා (silent fail වෙන්න දෙන්නේ නෑ)
             try {
                 const resp = await callOpenRouter(apiKey, model, systemPrompt, buildUserPrompt(texts, targetLang), 0.3, 4000);
                 const parsed = parseNumberedResponse(resp, texts.length);
                 if(parsed) return parsed;
             } catch(e) {
-                // API Error (Credits, Rate limit etc.) නම් කෙලින්ම throw කරන්න
                 if (e.message.includes('API Error') || e.message.includes('Credits') || e.message.includes('Rate Limit') || e.message.includes('API Key')) {
                     throw e; 
                 }
@@ -851,7 +850,6 @@ async function startTranslation(){
 
     }catch(err){
         console.error(err);
-        // Error එක කෙලින්ම යූසර්ට පෙන්නනවා
         toast('FAILED: ' + (err.message || 'Unknown error'), 'error');
         progressStage.textContent = 'Error occurred!';
         progressStage.style.color = 'var(--danger)';
