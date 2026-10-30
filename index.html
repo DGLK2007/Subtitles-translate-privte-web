@@ -7,589 +7,167 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <style>
 /* ==================== TOKENS (oio.lk inspired) ==================== */
 :root{
-    --bg:#f8f9fd;
-    --bg-soft:#eef1f9;
-    --card:#ffffff;
-    --card-2:#f5f7fd;
-    --border:#e5e9f2;
-    --border-strong:#d8dde9;
-    --text:#1a1d29;
-    --text-2:#5a6178;
-    --text-3:#8b93ab;
-    --primary:#6366f1;
-    --primary-2:#8b5cf6;
-    --primary-3:#a855f7;
-    --primary-soft:rgba(99,102,241,.08);
-    --primary-soft-2:rgba(139,92,246,.12);
-    --success:#10b981;
-    --success-soft:rgba(16,185,129,.1);
-    --danger:#ef4444;
-    --danger-soft:rgba(239,68,68,.1);
-    --warn:#f59e0b;
-    --warn-soft:rgba(245,158,11,.12);
-    --pink:#ec4899;
-    --blue:#3b82f6;
-    --radius-sm:10px;
-    --radius:16px;
-    --radius-lg:22px;
-    --radius-xl:28px;
-    --shadow-sm:0 1px 2px rgba(15,23,42,.04),0 1px 3px rgba(15,23,42,.06);
-    --shadow:0 4px 12px rgba(15,23,42,.06),0 2px 4px rgba(15,23,42,.04);
-    --shadow-lg:0 12px 32px rgba(99,102,241,.14),0 4px 12px rgba(15,23,42,.06);
-    --shadow-glow:0 8px 24px rgba(99,102,241,.28);
-    --nav-bg:rgba(255,255,255,.85);
+    --bg:#f8f9fd; --bg-soft:#eef1f9; --card:#ffffff; --card-2:#f5f7fd;
+    --border:#e5e9f2; --border-strong:#d8dde9; --text:#1a1d29; --text-2:#5a6178; --text-3:#8b93ab;
+    --primary:#6366f1; --primary-2:#8b5cf6; --primary-soft:rgba(99,102,241,.08); --primary-soft-2:rgba(139,92,246,.12);
+    --success:#10b981; --success-soft:rgba(16,185,129,.1); --danger:#ef4444; --danger-soft:rgba(239,68,68,.1);
+    --warn:#f59e0b; --warn-soft:rgba(245,158,11,.12); --radius-sm:10px; --radius:16px; --radius-lg:22px; --radius-xl:28px;
+    --shadow-sm:0 1px 3px rgba(15,23,42,.06); --shadow:0 4px 12px rgba(15,23,42,.06); --shadow-lg:0 12px 32px rgba(99,102,241,.14);
+    --shadow-glow:0 8px 24px rgba(99,102,241,.28); --nav-bg:rgba(255,255,255,.85);
     --gradient-primary:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a855f7 100%);
-    --gradient-soft:linear-gradient(135deg,rgba(99,102,241,.08),rgba(168,85,247,.08));
 }
 [data-theme="dark"]{
-    --bg:#0a0e21;
-    --bg-soft:#0f1430;
-    --card:#141a2f;
-    --card-2:#1a2140;
-    --border:#252c47;
-    --border-strong:#313a5a;
-    --text:#eef2ff;
-    --text-2:#a8b0cc;
-    --text-3:#6f7898;
-    --primary-soft:rgba(99,102,241,.14);
-    --primary-soft-2:rgba(139,92,246,.2);
-    --success-soft:rgba(16,185,129,.15);
-    --danger-soft:rgba(239,68,68,.15);
-    --warn-soft:rgba(245,158,11,.15);
-    --shadow-sm:0 1px 2px rgba(0,0,0,.2);
-    --shadow:0 4px 12px rgba(0,0,0,.25);
-    --shadow-lg:0 12px 32px rgba(99,102,241,.2);
+    --bg:#0a0e21; --bg-soft:#0f1430; --card:#141a2f; --card-2:#1a2140;
+    --border:#252c47; --border-strong:#313a5a; --text:#eef2ff; --text-2:#a8b0cc; --text-3:#6f7898;
+    --primary-soft:rgba(99,102,241,.14); --primary-soft-2:rgba(139,92,246,.2);
+    --success-soft:rgba(16,185,129,.15); --danger-soft:rgba(239,68,68,.15); --warn-soft:rgba(245,158,11,.15);
+    --shadow-sm:0 1px 2px rgba(0,0,0,.2); --shadow:0 4px 12px rgba(0,0,0,.25); --shadow-lg:0 12px 32px rgba(99,102,241,.2);
     --nav-bg:rgba(15,20,40,.85);
-    --gradient-soft:linear-gradient(135deg,rgba(99,102,241,.12),rgba(168,85,247,.12));
 }
 
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;}
 html,body{overflow-x:hidden;}
-body{
-    background:var(--bg);
-    color:var(--text);
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:14px 16px 44px;
-    transition:background .3s,color .3s;
-    -webkit-font-smoothing:antialiased;
-    line-height:1.6;
-}
-body::before{
-    content:"";
-    position:fixed;
-    top:0;left:0;right:0;height:500px;
-    background:radial-gradient(ellipse at 50% 0%,var(--primary-soft-2),transparent 70%);
-    pointer-events:none;
-    z-index:-1;
-}
+body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:14px 16px 44px;transition:background .3s,color .3s;-webkit-font-smoothing:antialiased;line-height:1.6;}
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:500px;background:radial-gradient(ellipse at 50% 0%,var(--primary-soft-2),transparent 70%);pointer-events:none;z-index:-1;}
 
-/* ==================== NAVBAR ==================== */
-.navbar{
-    position:sticky;top:12px;z-index:50;width:100%;max-width:1100px;
-    display:flex;align-items:center;justify-content:space-between;gap:12px;
-    padding:10px 14px;border-radius:var(--radius);
-    background:var(--nav-bg);backdrop-filter:blur(20px);
-    -webkit-backdrop-filter:blur(20px);
-    border:1px solid var(--border);
-    box-shadow:var(--shadow-sm);
-    margin-bottom:24px;
-}
-.brand{
-    display:flex;align-items:center;gap:10px;cursor:pointer;
-    padding:4px 4px;transition:transform .2s;
-}
-.brand:hover{transform:translateY(-1px);}
-.brand-logo{
-    width:34px;height:34px;border-radius:10px;
-    background:var(--gradient-primary);
-    display:flex;align-items:center;justify-content:center;
-    color:#fff;font-size:15px;
-    box-shadow:0 4px 10px rgba(99,102,241,.35);
-}
-.brand-name{
-    font-family:'Poppins',sans-serif;font-size:17px;font-weight:700;
-    letter-spacing:-.3px;color:var(--text);
-}
-.brand-name b{
-    background:var(--gradient-primary);-webkit-background-clip:text;
-    background-clip:text;-webkit-text-fill-color:transparent;
-}
-.nav-links{
-    display:flex;align-items:center;gap:2px;padding:4px;
-    background:var(--card-2);border-radius:12px;border:1px solid var(--border);
-}
-.nav-btn{
-    background:transparent;border:none;color:var(--text-2);
-    padding:8px 14px;border-radius:9px;cursor:pointer;
-    font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;
-    display:flex;align-items:center;gap:7px;transition:all .18s;white-space:nowrap;
-}
+/* NAVBAR */
+.navbar{position:sticky;top:12px;z-index:50;width:100%;max-width:1100px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border-radius:var(--radius);background:var(--nav-bg);backdrop-filter:blur(20px);border:1px solid var(--border);box-shadow:var(--shadow-sm);margin-bottom:24px;}
+.brand{display:flex;align-items:center;gap:10px;cursor:pointer;padding:4px 4px;}
+.brand-logo{width:34px;height:34px;border-radius:10px;background:var(--gradient-primary);display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;box-shadow:0 4px 10px rgba(99,102,241,.35);}
+.brand-name{font-family:'Poppins',sans-serif;font-size:17px;font-weight:700;letter-spacing:-.3px;color:var(--text);}
+.brand-name b{background:var(--gradient-primary);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.nav-links{display:flex;align-items:center;gap:2px;padding:4px;background:var(--card-2);border-radius:12px;border:1px solid var(--border);}
+.nav-btn{background:transparent;border:none;color:var(--text-2);padding:8px 14px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;display:flex;align-items:center;gap:7px;transition:all .18s;white-space:nowrap;}
 .nav-btn:hover{color:var(--text);background:var(--card);}
-.nav-btn.active{
-    color:#fff;background:var(--gradient-primary);
-    box-shadow:0 4px 12px rgba(99,102,241,.32);
-}
+.nav-btn.active{color:#fff;background:var(--gradient-primary);box-shadow:0 4px 12px rgba(99,102,241,.32);}
 .nav-btn i{font-size:12px;}
-.theme-toggle{
-    width:38px;height:38px;border-radius:11px;
-    background:var(--card-2);border:1px solid var(--border);
-    color:var(--text);cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
-    font-size:13px;transition:all .2s;flex-shrink:0;
-}
-.theme-toggle:hover{background:var(--primary-soft);border-color:var(--primary);color:var(--primary);}
+.theme-toggle{width:38px;height:38px;border-radius:11px;background:var(--card-2);border:1px solid var(--border);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s;flex-shrink:0;}
 
-/* ==================== MAIN ==================== */
+/* MAIN */
 main{width:100%;max-width:1100px;display:flex;flex-direction:column;align-items:center;}
 .page{display:none;width:100%;}
-.page.active{display:flex;flex-direction:column;align-items:center;animation:pageIn .35s cubic-bezier(.4,0,.2,1);}
+.page.active{display:flex;flex-direction:column;align-items:center;animation:pageIn .35s ease;}
 @keyframes pageIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-/* ==================== HERO ==================== */
-.hero{
-    width:100%;max-width:780px;text-align:center;
-    padding:44px 20px 20px;
-    display:flex;flex-direction:column;align-items:center;gap:22px;
-}
-.hero-badge{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:8px 16px;border-radius:999px;
-    background:var(--card);border:1px solid var(--border);
-    font-size:12px;font-weight:600;font-family:'Poppins',sans-serif;
-    color:var(--text-2);
-    box-shadow:var(--shadow-sm);
-}
-.hero-badge .dot{
-    width:6px;height:6px;border-radius:50%;
-    background:var(--success);
-    box-shadow:0 0 0 3px var(--success-soft);
-    animation:pulse 2s ease-in-out infinite;
-}
-@keyframes pulse{
-    0%,100%{box-shadow:0 0 0 3px var(--success-soft);}
-    50%{box-shadow:0 0 0 6px transparent;}
-}
-.hero-title{
-    font-family:'Poppins',sans-serif;
-    font-size:clamp(38px,8vw,68px);
-    font-weight:800;letter-spacing:-2.5px;line-height:1.05;
-    background:var(--gradient-primary);
-    -webkit-background-clip:text;background-clip:text;
-    -webkit-text-fill-color:transparent;
-    padding:4px 0;
-}
-.hero-sub{
-    font-size:15.5px;line-height:1.7;color:var(--text-2);
-    max-width:600px;font-weight:400;
-}
+/* HERO */
+.hero{width:100%;max-width:780px;text-align:center;padding:44px 20px 20px;display:flex;flex-direction:column;align-items:center;gap:22px;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;font-weight:600;font-family:'Poppins',sans-serif;color:var(--text-2);box-shadow:var(--shadow-sm);}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 0 3px var(--success-soft);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 3px var(--success-soft);}50%{box-shadow:0 0 0 6px transparent;}}
+.hero-title{font-family:'Poppins',sans-serif;font-size:clamp(38px,8vw,68px);font-weight:800;letter-spacing:-2.5px;line-height:1.05;background:var(--gradient-primary);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;padding:4px 0;}
+.hero-sub{font-size:15.5px;line-height:1.7;color:var(--text-2);max-width:600px;}
 .hero-sub b{color:var(--text);font-weight:600;}
-.hero-actions{
-    display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px;
-}
-.btn-primary{
-    padding:14px 28px;border-radius:13px;border:none;cursor:pointer;
-    font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;
-    display:inline-flex;align-items:center;justify-content:center;gap:10px;
-    color:#fff;background:var(--gradient-primary);
-    box-shadow:var(--shadow-glow);transition:all .2s;
-    min-width:200px;
-}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px;}
+.btn-primary{padding:14px 28px;border-radius:13px;border:none;cursor:pointer;font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:10px;color:#fff;background:var(--gradient-primary);box-shadow:var(--shadow-glow);transition:all .2s;min-width:200px;}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(99,102,241,.42);}
-.btn-primary:active{transform:translateY(0);}
-.btn-outline{
-    padding:14px 28px;border-radius:13px;cursor:pointer;
-    font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;
-    display:inline-flex;align-items:center;justify-content:center;gap:10px;
-    color:var(--text);background:var(--card);
-    border:1px solid var(--border);box-shadow:var(--shadow-sm);
-    transition:all .2s;min-width:200px;
-}
-.btn-outline:hover{transform:translateY(-2px);border-color:var(--primary);color:var(--primary);box-shadow:var(--shadow);}
+.btn-outline{padding:14px 28px;border-radius:13px;cursor:pointer;font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:10px;color:var(--text);background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow-sm);transition:all .2s;min-width:200px;}
 
-/* ==================== FEATURES ==================== */
-.features{
-    width:100%;max-width:980px;
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:16px;margin-top:44px;
-}
-.feature{
-    background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
-    padding:26px 22px;text-align:center;box-shadow:var(--shadow-sm);
-    transition:all .25s;
-}
-.feature:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--border-strong);}
-.feature-icon{
-    width:56px;height:56px;border-radius:16px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:22px;margin:0 auto 16px;transition:transform .3s;
-}
-.feature:hover .feature-icon{transform:scale(1.08) rotate(-3deg);}
-.feature-icon.purple{background:var(--primary-soft-2);color:var(--primary-2);}
-.feature-icon.green{background:var(--success-soft);color:var(--success);}
-.feature-icon.orange{background:var(--warn-soft);color:var(--warn);}
-.feature h3{
-    font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;
-    letter-spacing:.3px;margin-bottom:8px;color:var(--text);
-}
-.feature p{font-size:13.5px;line-height:1.7;color:var(--text-2);}
-
-/* ==================== CONTAINER / CARDS ==================== */
-.container{
-    background:var(--card);border:1px solid var(--border);
-    border-radius:var(--radius-lg);padding:28px;
-    width:100%;max-width:720px;
-    box-shadow:var(--shadow);
-    margin-bottom:16px;
-}
-.section-header{
-    display:flex;align-items:center;gap:12px;
-    margin-bottom:22px;
-    padding-bottom:18px;
-    border-bottom:1px solid var(--border);
-}
-.section-header-icon{
-    width:42px;height:42px;border-radius:12px;flex-shrink:0;
-    background:var(--gradient-primary);
-    display:flex;align-items:center;justify-content:center;
-    color:#fff;font-size:16px;
-    box-shadow:0 4px 12px rgba(99,102,241,.3);
-}
-.section-header h2{
-    font-family:'Poppins',sans-serif;font-size:18px;font-weight:700;
-    letter-spacing:-.2px;color:var(--text);line-height:1.2;
-}
+/* CONTAINER */
+.container{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:720px;box-shadow:var(--shadow);margin-bottom:16px;}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.section-header-icon{width:42px;height:42px;border-radius:12px;flex-shrink:0;background:var(--gradient-primary);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;box-shadow:0 4px 12px rgba(99,102,241,.3);}
+.section-header h2{font-family:'Poppins',sans-serif;font-size:18px;font-weight:700;color:var(--text);line-height:1.2;}
 .section-header p{font-size:12.5px;color:var(--text-3);margin-top:3px;}
 
 .form-group{margin-bottom:18px;}
-label{
-    display:block;margin-bottom:8px;
-    font-size:12.5px;font-weight:600;
-    color:var(--text);font-family:'Poppins',sans-serif;
-}
+label{display:block;margin-bottom:8px;font-size:12.5px;font-weight:600;color:var(--text);font-family:'Poppins',sans-serif;}
 label i{color:var(--primary-2);margin-right:6px;font-size:12px;}
 .hint{font-size:11.5px;color:var(--text-3);margin-top:6px;line-height:1.6;}
 .hint a{color:var(--primary-2);text-decoration:none;font-weight:600;}
-.hint a:hover{text-decoration:underline;}
 
-/* ==================== DROP ZONE ==================== */
-.file-drop-zone{
-    border:1.5px dashed var(--border-strong);
-    background:var(--card-2);
-    padding:26px 18px;text-align:center;border-radius:var(--radius);
-    cursor:pointer;position:relative;overflow:hidden;
-    transition:all .2s;
-}
-.file-drop-zone:hover{
-    border-color:var(--primary-2);background:var(--primary-soft);
-    border-style:solid;
-}
+/* DROP ZONE */
+.file-drop-zone{border:1.5px dashed var(--border-strong);background:var(--card-2);padding:26px 18px;text-align:center;border-radius:var(--radius);cursor:pointer;position:relative;overflow:hidden;transition:all .2s;}
+.file-drop-zone:hover{border-color:var(--primary-2);background:var(--primary-soft);border-style:solid;}
 .file-drop-zone:hover .drop-icon{transform:translateY(-3px) scale(1.05);color:var(--primary-2);}
-.drop-icon{
-    font-size:28px;color:var(--primary);margin-bottom:10px;display:inline-block;
-    transition:all .25s;
-}
+.drop-icon{font-size:28px;color:var(--primary);margin-bottom:10px;display:inline-block;transition:all .25s;}
 .file-drop-zone p{font-size:13px;color:var(--text-2);font-weight:500;line-height:1.5;}
 .file-drop-zone p small{color:var(--text-3);font-weight:400;font-size:11.5px;display:block;margin-top:3px;}
-.file-drop-zone input{
-    position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2;
-}
+.file-drop-zone input{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2;}
 
-.file-list-display{
-    margin-top:10px;padding:12px 14px;border-radius:var(--radius-sm);
-    background:var(--card-2);border:1px solid var(--border);
-    font-size:12.5px;color:var(--text-2);line-height:1.7;
-    max-height:220px;overflow-y:auto;
-}
+.file-list-display{margin-top:10px;padding:12px 14px;border-radius:var(--radius-sm);background:var(--card-2);border:1px solid var(--border);font-size:12.5px;color:var(--text-2);line-height:1.7;max-height:220px;overflow-y:auto;}
 .file-list-display:empty{display:none;}
 .file-list-display b{color:var(--primary-2);font-family:'Poppins',sans-serif;}
-.zip-info{
-    color:var(--success);font-weight:600;margin-top:8px;padding-top:8px;
-    border-top:1px dashed var(--border);
-}
+.zip-info{color:var(--success);font-weight:600;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);}
 .zip-sub{color:var(--text-3);font-size:11.5px;padding-left:8px;}
 
-/* ==================== INPUTS ==================== */
-select,input[type="text"],input[type="password"],input[type="number"]{
-    width:100%;padding:12px 14px;border-radius:var(--radius-sm);
-    border:1px solid var(--border);background:var(--card-2);
-    color:var(--text);font-size:14px;font-weight:500;
-    outline:none;font-family:'Inter',sans-serif;
-    transition:all .18s;
-}
-select{
-    cursor:pointer;appearance:none;-webkit-appearance:none;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b93ab' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-    background-repeat:no-repeat;background-position:right 12px center;
-    background-size:14px;padding-right:38px;
-}
-select:focus,input:focus{
-    border-color:var(--primary-2);background:var(--card);
-    box-shadow:0 0 0 3px var(--primary-soft);
-}
-input[type="color"]{
-    width:100%;height:44px;padding:4px;border-radius:var(--radius-sm);
-    border:1px solid var(--border);background:var(--card-2);cursor:pointer;
-}
+/* INPUTS */
+select,input[type="text"],input[type="password"]{width:100%;padding:12px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card-2);color:var(--text);font-size:14px;font-weight:500;outline:none;font-family:'Inter',sans-serif;transition:all .18s;}
+select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b93ab' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 12px center;background-size:14px;padding-right:38px;}
+select:focus,input:focus{border-color:var(--primary-2);background:var(--card);box-shadow:0 0 0 3px var(--primary-soft);}
+input[type="color"]{width:100%;height:44px;padding:4px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card-2);cursor:pointer;}
 input[type="color"]::-webkit-color-swatch-wrapper{padding:2px;}
 input[type="color"]::-webkit-color-swatch{border:none;border-radius:6px;}
 
 .grid-3{display:grid;grid-template-columns:1.4fr 1fr 1.2fr;gap:8px;}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 
-/* ==================== BUTTONS ==================== */
-.btn{
-    width:100%;padding:14px;border-radius:var(--radius-sm);border:none;
-    font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;
-    cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
-    transition:all .18s;
-}
-.btn-gradient{
-    color:#fff;background:var(--gradient-primary);
-    box-shadow:0 6px 16px rgba(99,102,241,.32);
-}
+/* BUTTONS */
+.btn{width:100%;padding:14px;border-radius:var(--radius-sm);border:none;font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .18s;}
+.btn-gradient{color:#fff;background:var(--gradient-primary);box-shadow:0 6px 16px rgba(99,102,241,.32);}
 .btn-gradient:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 22px rgba(99,102,241,.42);}
 .btn-gradient:disabled{opacity:.7;cursor:not-allowed;}
-.btn-success{
-    color:#fff;background:linear-gradient(135deg,#10b981,#059669);
-    box-shadow:0 6px 16px rgba(16,185,129,.3);
-    margin-top:10px;display:none;
-}
+.btn-success{color:#fff;background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 6px 16px rgba(16,185,129,.3);margin-top:10px;display:none;}
 .btn-success.show{display:flex;animation:fadeUp .3s ease;}
-.btn-success:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(16,185,129,.42);}
-.btn-ghost{
-    color:var(--text);background:var(--card-2);
-    border:1px solid var(--border);margin-top:8px;
-}
-.btn-ghost:hover{background:var(--card);border-color:var(--primary);color:var(--primary);}
-.btn-danger{
-    color:var(--danger);background:var(--danger-soft);
-    border:1px solid rgba(239,68,68,.2);margin-top:8px;
-}
-.btn-danger:hover{background:rgba(239,68,68,.15);}
+.btn-ghost{color:var(--text);background:var(--card-2);border:1px solid var(--border);margin-top:8px;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
-.spinner{
-    display:none;width:16px;height:16px;
-    border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;
-    border-radius:50%;animation:spin .7s linear infinite;
-}
+.spinner{display:none;width:16px;height:16px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* ==================== PROGRESS ==================== */
-.progress-wrap{
-    display:none;margin-top:16px;
-    background:var(--card-2);border-radius:var(--radius-sm);
-    padding:14px;
-    border:1px solid var(--border);
-}
+/* PROGRESS */
+.progress-wrap{display:none;margin-top:16px;background:var(--card-2);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);}
 .progress-wrap.show{display:block;animation:fadeUp .3s ease;}
-.progress-info{
-    display:flex;justify-content:space-between;
-    font-size:12px;font-weight:600;color:var(--text-2);
-    margin-bottom:8px;font-family:'Poppins',sans-serif;
-}
+.progress-info{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:8px;font-family:'Poppins',sans-serif;}
 .progress-info .right{color:var(--primary-2);}
-.progress-bar-bg{
-    height:8px;background:var(--bg-soft);border-radius:99px;overflow:hidden;
-}
-.progress-bar{
-    height:100%;width:0%;border-radius:99px;
-    background:var(--gradient-primary);
-    transition:width .3s ease;
-}
-.progress-stats{
-    display:flex;justify-content:space-between;gap:8px;
-    margin-top:10px;flex-wrap:wrap;
-}
-.stat-chip{
-    display:inline-flex;align-items:center;gap:6px;
-    padding:4px 10px;border-radius:8px;
-    background:var(--card);border:1px solid var(--border);
-    font-size:11px;font-weight:600;font-family:'Poppins',sans-serif;
-    color:var(--text-2);
-}
-.stat-chip i{font-size:10px;color:var(--primary-2);}
+.progress-bar-bg{height:8px;background:var(--bg-soft);border-radius:99px;overflow:hidden;}
+.progress-bar{height:100%;width:0%;border-radius:99px;background:var(--gradient-primary);transition:width .3s ease;}
+.progress-stats{display:flex;justify-content:space-between;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.stat-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;background:var(--card);border:1px solid var(--border);font-size:11px;font-weight:600;font-family:'Poppins',sans-serif;color:var(--text-2);}
 .stat-chip.dedup{color:var(--success);}
-.stat-chip.dedup i{color:var(--success);}
 
-/* ==================== PRESETS ==================== */
-.preset-row{
-    display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
-    margin-bottom:16px;
-}
-.preset{
-    padding:12px 8px;border-radius:var(--radius-sm);
-    background:var(--card-2);border:1.5px solid var(--border);
-    cursor:pointer;text-align:center;transition:all .18s;
-    display:flex;flex-direction:column;align-items:center;gap:5px;
-}
+/* PRESETS */
+.preset-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+.preset{padding:12px 8px;border-radius:var(--radius-sm);background:var(--card-2);border:1.5px solid var(--border);cursor:pointer;text-align:center;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:5px;}
 .preset:hover{border-color:var(--primary-2);background:var(--primary-soft);}
-.preset.active{
-    background:var(--gradient-primary);border-color:transparent;
-    box-shadow:0 4px 14px rgba(99,102,241,.3);
-}
+.preset.active{background:var(--gradient-primary);border-color:transparent;box-shadow:0 4px 14px rgba(99,102,241,.3);}
 .preset.active .preset-name,.preset.active .preset-desc{color:#fff;}
 .preset-emoji{font-size:20px;line-height:1;}
-.preset-name{
-    font-size:12px;font-weight:700;font-family:'Poppins',sans-serif;
-    color:var(--text);
-}
+.preset-name{font-size:12px;font-weight:700;font-family:'Poppins',sans-serif;color:var(--text);}
 .preset-desc{font-size:10px;color:var(--text-3);line-height:1.3;}
 
-/* ==================== STATUS BADGES ==================== */
-.status{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:10px 14px;border-radius:var(--radius-sm);
-    font-size:12.5px;font-weight:600;font-family:'Poppins',sans-serif;
-    width:100%;
-}
+/* STATUS */
+.status{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:var(--radius-sm);font-size:12.5px;font-weight:600;font-family:'Poppins',sans-serif;width:100%;}
 .status.ok{background:var(--success-soft);color:var(--success);border:1px solid rgba(16,185,129,.25);}
 .status.err{background:var(--danger-soft);color:var(--danger);border:1px solid rgba(239,68,68,.25);}
 .status.warn{background:var(--warn-soft);color:var(--warn);border:1px solid rgba(245,158,11,.25);}
 .status a{color:inherit;text-decoration:underline;}
 
-/* ==================== INSTRUCTIONS ==================== */
-.instructions{
-    background:var(--card);border:1px solid var(--border);
-    border-radius:var(--radius-lg);padding:22px 24px;
-    width:100%;max-width:720px;box-shadow:var(--shadow-sm);
-}
-.instructions h3{
-    display:flex;align-items:center;gap:10px;
-    font-family:'Poppins',sans-serif;font-size:14.5px;font-weight:700;
-    color:var(--text);margin-bottom:14px;
-}
+/* INSTRUCTIONS & ABOUT & FOOTER */
+.instructions{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 24px;width:100%;max-width:720px;box-shadow:var(--shadow-sm);}
+.instructions h3{display:flex;align-items:center;gap:10px;font-family:'Poppins',sans-serif;font-size:14.5px;font-weight:700;color:var(--text);margin-bottom:14px;}
 .instructions h3 i{color:var(--primary-2);font-size:15px;}
 .instructions ol{padding-left:20px;font-size:13.5px;color:var(--text-2);line-height:1.9;}
-.instructions li{margin-bottom:6px;}
 .instructions b{color:var(--primary-2);font-weight:600;}
 
-/* ==================== ABOUT ==================== */
-.about-card{
-    background:var(--card);border:1px solid var(--border);
-    border-radius:var(--radius-xl);padding:36px 28px;
-    width:100%;max-width:720px;
-    box-shadow:var(--shadow);
-    text-align:center;
-}
-.avatar{
-    width:104px;height:104px;border-radius:50%;
-    object-fit:cover;display:block;margin:0 auto 16px;
-    border:3px solid var(--card);outline:3px solid var(--primary-2);
-    box-shadow:0 8px 22px rgba(99,102,241,.3);
-}
-.about-card h2{
-    font-family:'Poppins',sans-serif;font-size:22px;font-weight:700;
-    color:var(--text);margin-bottom:4px;
-}
-.about-role{
-    font-size:11.5px;font-weight:600;color:var(--primary-2);
-    letter-spacing:1px;text-transform:uppercase;
-    font-family:'Poppins',sans-serif;margin-bottom:20px;
-}
-.about-text{
-    font-size:14px;line-height:1.8;color:var(--text-2);
-    max-width:580px;margin:0 auto 24px;
-}
-.about-text b{color:var(--text);}
-.info-grid{
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-    gap:10px;margin-bottom:22px;
-}
-.info-item{
-    background:var(--card-2);border:1px solid var(--border);
-    border-radius:var(--radius-sm);padding:14px;
-    display:flex;align-items:center;gap:12px;text-align:left;
-    transition:all .2s;
-}
-.info-item:hover{transform:translateY(-2px);border-color:var(--primary-2);}
-.info-item-icon{
-    width:38px;height:38px;border-radius:10px;flex-shrink:0;
-    display:flex;align-items:center;justify-content:center;
-    font-size:15px;color:#fff;
-    background:var(--gradient-primary);
-}
-.info-item-icon.wa{background:linear-gradient(135deg,#25d366,#128c7e);}
-.info-item-icon.age{background:linear-gradient(135deg,#f59e0b,#ef4444);}
-.info-item-icon.loc{background:linear-gradient(135deg,#ec4899,#a855f7);}
-.info-item .lbl{
-    font-size:10px;font-weight:700;text-transform:uppercase;
-    letter-spacing:.8px;color:var(--text-3);
-    font-family:'Poppins',sans-serif;margin-bottom:2px;
-}
-.info-item .val{font-size:13px;font-weight:600;color:var(--text);word-break:break-all;}
-.info-item a{color:inherit;text-decoration:none;}
-.info-item a:hover{color:var(--primary-2);}
-.tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
-.tag{
-    padding:6px 12px;border-radius:999px;font-size:11.5px;font-weight:600;
-    font-family:'Poppins',sans-serif;background:var(--primary-soft);
-    color:var(--primary-2);border:1px solid var(--primary-soft-2);
-    transition:all .2s;
-}
-.tag:hover{background:var(--gradient-primary);color:#fff;border-color:transparent;transform:translateY(-1px);}
-
-/* ==================== FOOTER ==================== */
-.footer{
-    margin-top:36px;text-align:center;
-    font-size:12px;color:var(--text-3);line-height:1.9;
-}
-
-/* ==================== TOAST ==================== */
-.toast{
-    position:fixed;left:50%;bottom:24px;
-    transform:translate(-50%,140%);
-    background:var(--gradient-primary);color:#fff;
-    padding:12px 20px;border-radius:12px;
-    font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;
-    box-shadow:0 12px 28px rgba(99,102,241,.4);
-    z-index:200;opacity:0;transition:all .3s;
-    pointer-events:none;max-width:88vw;text-align:center;
-}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,140%);background:var(--gradient-primary);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;box-shadow:0 12px 28px rgba(99,102,241,.4);z-index:200;opacity:0;transition:all .3s;pointer-events:none;max-width:88vw;text-align:center;}
 .toast.show{transform:translate(-50%,0);opacity:1;}
 .toast.error{background:linear-gradient(135deg,#ef4444,#dc2626);box-shadow:0 12px 28px rgba(239,68,68,.4);}
 .toast.success{background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 12px 28px rgba(16,185,129,.4);}
 
-/* ==================== RESPONSIVE ==================== */
-@media (max-width:820px){
-    .navbar{flex-wrap:wrap;justify-content:center;padding:8px 12px;}
-    .brand{font-size:15px;}
-    .nav-links{order:3;width:100%;}
-    .nav-btn{flex:1 1 auto;justify-content:center;padding:7px 8px;font-size:12px;}
-    .nav-btn i{display:none;}
-    .theme-toggle{width:36px;height:36px;}
-}
-@media (max-width:520px){
-    body{padding:10px 10px 32px;}
-    .container{padding:22px 16px;border-radius:18px;}
-    .hero{padding:24px 8px 12px;}
-    .hero-title{letter-spacing:-1.5px;}
-    .btn-primary,.btn-outline{width:100%;min-width:0;}
-    .grid-3{grid-template-columns:1fr 1fr;}
-    .grid-3 select:first-child{grid-column:1 / -1;}
-    .grid-2{grid-template-columns:1fr;}
-    .preset-row{grid-template-columns:1fr;}
-    .preset{flex-direction:row;justify-content:flex-start;padding:10px 14px;gap:12px;}
-    .preset-emoji{font-size:18px;}
-    .about-card{padding:28px 18px;}
-    .info-grid{grid-template-columns:1fr 1fr;}
-}
+@media (max-width:820px){ .navbar{flex-wrap:wrap;justify-content:center;padding:8px 12px;} .nav-links{order:3;width:100%;} .nav-btn{flex:1 1 auto;justify-content:center;padding:7px 8px;font-size:12px;} .nav-btn i{display:none;} .theme-toggle{width:36px;height:36px;} }
+@media (max-width:520px){ body{padding:10px 10px 32px;} .container{padding:22px 16px;border-radius:18px;} .hero{padding:24px 8px 12px;} .btn-primary,.btn-outline{width:100%;min-width:0;} .grid-3{grid-template-columns:1fr 1fr;} .grid-3 select:first-child{grid-column:1 / -1;} .grid-2{grid-template-columns:1fr;} .preset-row{grid-template-columns:1fr;} .preset{flex-direction:row;justify-content:flex-start;padding:10px 14px;gap:12px;} }
 </style>
 </head>
 
 <body data-theme="light">
 
-<!-- ==================== NAVBAR ==================== -->
 <header class="navbar">
     <div class="brand" onclick="showPage('home')">
         <div class="brand-logo"><i class="fa-solid fa-bolt"></i></div>
@@ -607,66 +185,29 @@ input[type="color"]::-webkit-color-swatch{border:none;border-radius:6px;}
 </header>
 
 <main>
-
-<!-- ==================== HOME ==================== -->
+<!-- HOME -->
 <section id="page-home" class="page active">
     <div class="hero">
-        <div class="hero-badge">
-            <span class="dot"></span>
-            Powered by OpenRouter AI
-        </div>
+        <div class="hero-badge"><span class="dot"></span> Powered by OpenRouter AI</div>
         <h1 class="hero-title">DG SUBZ PRO</h1>
-        <p class="hero-sub">
-            Translate subtitles into <b>Natural Spoken Sinhala</b> (කතා කරන භාෂාව) using your own
-            <b>OpenRouter API key</b>. Batch translate <b>SRT</b>, <b>ASS</b> &amp; <b>ZIP</b> files
-            at lightning speed with AI-quality natural dialogue.
-        </p>
+        <p class="hero-sub">Translate subtitles into <b>Natural Spoken Sinhala</b> (කතා කරන භාෂාව) using your own <b>OpenRouter API key</b>.</p>
         <div class="hero-actions">
-            <button class="btn-primary" onclick="showPage('translator')">
-                <i class="fa-solid fa-language"></i> Start Translating
-            </button>
-            <button class="btn-outline" onclick="showPage('settings')">
-                <i class="fa-solid fa-key"></i> API Settings
-            </button>
-        </div>
-    </div>
-
-    <div class="features">
-        <div class="feature">
-            <div class="feature-icon purple"><i class="fa-solid fa-comments"></i></div>
-            <h3>NATURAL SINHALA</h3>
-            <p>AI tuned for colloquial, movie-style Sinhala — කළා, ගියා, ඉන්නවා, හින්දා — not robotic formal forms.</p>
-        </div>
-        <div class="feature">
-            <div class="feature-icon orange"><i class="fa-solid fa-bolt"></i></div>
-            <h3>ULTRA FAST</h3>
-            <p>Parallel batches + dedup system. Same lines translated once, saving 30–40% of API calls and time.</p>
-        </div>
-        <div class="feature">
-            <div class="feature-icon green"><i class="fa-solid fa-shield-halved"></i></div>
-            <h3>100% PRIVATE</h3>
-            <p>API key and files stay in your browser. Nothing is uploaded to any server — full privacy guaranteed.</p>
+            <button class="btn-primary" onclick="showPage('translator')"><i class="fa-solid fa-language"></i> Start Translating</button>
+            <button class="btn-outline" onclick="showPage('settings')"><i class="fa-solid fa-key"></i> API Settings</button>
         </div>
     </div>
 </section>
 
-<!-- ==================== TRANSLATOR ==================== -->
+<!-- TRANSLATOR -->
 <section id="page-translator" class="page">
     <div class="container">
         <div class="section-header">
             <div class="section-header-icon"><i class="fa-solid fa-language"></i></div>
-            <div>
-                <h2>Subtitle Translator</h2>
-                <p>Batch translate SRT, ASS &amp; ZIP files</p>
-            </div>
+            <div><h2>Subtitle Translator</h2><p>Batch translate SRT, ASS &amp; ZIP files</p></div>
         </div>
 
         <div id="keyWarning" class="form-group" style="display:none;">
-            <div class="status err">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                API key not set.
-                <a href="#" onclick="showPage('settings');return false;">Go to Settings →</a>
-            </div>
+            <div class="status err"><i class="fa-solid fa-triangle-exclamation"></i> API key not set. <a href="#" onclick="showPage('settings');return false;">Go to Settings →</a></div>
         </div>
 
         <div class="form-group">
@@ -676,7 +217,6 @@ input[type="color"]::-webkit-color-swatch{border:none;border-radius:6px;}
                 <option value="si_formal">Sinhala — Formal / Written (ලිඛිත සිංහල)</option>
                 <option value="en">English</option>
                 <option value="ta">Tamil (தமிழ்)</option>
-                <option value="hi">Hindi (हिन्दी)</option>
             </select>
         </div>
 
@@ -688,43 +228,33 @@ input[type="color"]::-webkit-color-swatch{border:none;border-radius:6px;}
                     <option value="Noto Sans Sinhala">Noto Sans Sinhala</option>
                     <option value="FM Abhaya">FM Abhaya</option>
                     <option value="Poppins">Poppins</option>
-                    <option value="Inter">Inter</option>
                     <option value="Arial">Arial</option>
                     <option value="Verdana">Verdana</option>
-                    <option value="Tahoma">Tahoma</option>
-                    <option value="Segoe UI">Segoe UI</option>
-                    <option value="Roboto">Roboto</option>
-                    <option value="Times New Roman">Times New Roman</option>
-                    <option value="Georgia">Georgia</option>
-                    <option value="Trebuchet MS">Trebuchet MS</option>
-                    <option value="Courier New">Courier New</option>
                 </select>
                 <select id="fontSize">
-                    <option>12</option><option>14</option><option>16</option><option>18</option>
-                    <option>20</option><option selected>22</option><option>24</option>
-                    <option>26</option><option>28</option><option>32</option><option>36</option><option>40</option>
+                    <option>16</option><option>18</option><option>20</option><option selected>22</option><option>24</option><option>26</option><option>28</option><option>32</option>
                 </select>
                 <select id="fontStyle">
                     <option value="normal" selected>Normal</option>
                     <option value="bold">Bold</option>
                     <option value="italic">Italic</option>
-                    <option value="bolditalic">Bold Italic</option>
                 </select>
             </div>
         </div>
 
-        <div class="form-group">
-            <label><i class="fa-solid fa-droplet"></i> Font Color</label>
-            <input type="color" id="fontColor" value="#ffff00">
+        <div class="grid-2">
+            <div class="form-group">
+                <label><i class="fa-solid fa-droplet"></i> Font Color</label>
+                <input type="color" id="fontColor" value="#ffff00">
+            </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-water"></i> Watermark (Optional)</label>
+                <input type="text" id="watermarkText" value="dgsubz.netlify.app" placeholder="e.g. dgsubz">
+            </div>
         </div>
 
         <div class="form-group">
-            <label><i class="fa-solid fa-water"></i> Watermark (empty = disabled)</label>
-            <input type="text" id="watermarkText" value="dgsubz.netlify.app" placeholder="e.g. dgsubz.netlify.app">
-        </div>
-
-        <div class="form-group">
-            <label><i class="fa-solid fa-file-arrow-up"></i> Upload Files (.srt / .ass / .zip — multiple)</label>
+            <label><i class="fa-solid fa-file-arrow-up"></i> Upload Files (.srt / .ass / .zip)</label>
             <div class="file-drop-zone">
                 <div class="drop-icon"><i class="fa-solid fa-file-zipper"></i></div>
                 <p>Drag &amp; drop or click to upload<small>.srt / .ass / .zip files</small></p>
@@ -739,13 +269,8 @@ input[type="color"]::-webkit-color-swatch{border:none;border-radius:6px;}
         </button>
 
         <div class="progress-wrap" id="progressWrap">
-            <div class="progress-info">
-                <span id="progressStage">Preparing...</span>
-                <span class="right" id="progressPct">0%</span>
-            </div>
-            <div class="progress-bar-bg">
-                <div class="progress-bar" id="progressBar"></div>
-            </div>
+            <div class="progress-info"><span id="progressStage">Preparing...</span><span class="right" id="progressPct">0%</span></div>
+            <div class="progress-bar-bg"><div class="progress-bar" id="progressBar"></div></div>
             <div class="progress-stats">
                 <span class="stat-chip"><i class="fa-solid fa-list"></i> <span id="statLines">0 lines</span></span>
                 <span class="stat-chip dedup"><i class="fa-solid fa-clone"></i> <span id="statDedup">0 saved</span></span>
@@ -757,47 +282,27 @@ input[type="color"]::-webkit-color-swatch{border:none;border-radius:6px;}
             <i class="fa-solid fa-download"></i> Download Translated ZIP
         </button>
     </div>
-
-    <div class="instructions">
-        <h3><i class="fa-solid fa-circle-info"></i> How to Use</h3>
-        <ol>
-            <li>Go to <b>Settings</b> → add your OpenRouter API key → choose model + speed preset.</li>
-            <li>Select target language (default: <b>Natural Spoken Sinhala</b>), styling &amp; watermark.</li>
-            <li>Upload <b>.srt</b> / <b>.ass</b> / <b>.zip</b> files — multiple at once.</li>
-            <li>Click <b>Translate Files</b> — progress bar shows lines, dedup savings &amp; time remaining.</li>
-            <li>Click <b>Download Translated ZIP</b> to get all files in one ZIP.</li>
-        </ol>
-    </div>
 </section>
 
-<!-- ==================== SETTINGS ==================== -->
+<!-- SETTINGS -->
 <section id="page-settings" class="page">
     <div class="container">
         <div class="section-header">
             <div class="section-header-icon"><i class="fa-solid fa-gear"></i></div>
-            <div>
-                <h2>API Settings</h2>
-                <p>Configure OpenRouter + speed</p>
-            </div>
+            <div><h2>API Settings</h2><p>Configure OpenRouter + speed</p></div>
         </div>
 
         <div class="form-group">
             <label><i class="fa-solid fa-rocket"></i> Speed Preset</label>
             <div class="preset-row">
                 <div class="preset" data-preset="ultra" onclick="applyPreset('ultra')">
-                    <div class="preset-emoji">🚀</div>
-                    <div class="preset-name">Ultra Fast</div>
-                    <div class="preset-desc">8 parallel · batch 50</div>
+                    <div class="preset-emoji">🚀</div><div class="preset-name">Ultra Fast</div><div class="preset-desc">6 parallel · batch 40</div>
                 </div>
                 <div class="preset active" data-preset="balanced" onclick="applyPreset('balanced')">
-                    <div class="preset-emoji">⚖️</div>
-                    <div class="preset-name">Balanced</div>
-                    <div class="preset-desc">6 parallel · batch 40</div>
+                    <div class="preset-emoji">⚖️</div><div class="preset-name">Balanced</div><div class="preset-desc">3 parallel · batch 30</div>
                 </div>
                 <div class="preset" data-preset="quality" onclick="applyPreset('quality')">
-                    <div class="preset-emoji">🎯</div>
-                    <div class="preset-name">Quality</div>
-                    <div class="preset-desc">4 parallel · batch 25</div>
+                    <div class="preset-emoji">🎯</div><div class="preset-name">Safe</div><div class="preset-desc">2 parallel · batch 20</div>
                 </div>
             </div>
         </div>
@@ -805,28 +310,22 @@ input[type="color"]::-webkit-color-swatch{border:none;border-radius:6px;}
         <div class="form-group">
             <label><i class="fa-solid fa-key"></i> OpenRouter API Key</label>
             <input type="password" id="apiKeyInput" placeholder="sk-or-v1-..." autocomplete="off">
-            <div class="hint">
-                <i class="fa-solid fa-lock"></i> Stored only in your browser's localStorage.
-                Get a key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>
-            </div>
+            <div class="hint"><i class="fa-solid fa-lock"></i> Stored in your browser. Get a key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a></div>
         </div>
 
         <div class="form-group">
-            <label><i class="fa-solid fa-brain"></i> AI Model</label>
+            <label><i class="fa-solid fa-brain"></i> AI Model (Free Models have :free tag)</label>
             <select id="modelSelect" onchange="toggleCustomModel()">
-                <option value="google/gemini-2.0-flash-001" selected>Google Gemini 2.0 Flash ⭐ Fastest</option>
-                <option value="google/gemini-flash-1.5">Google Gemini Flash 1.5</option>
-                <option value="meta-llama/llama-3.3-70b-instruct">Meta Llama 3.3 70B</option>
-                <option value="meta-llama/llama-3.1-70b-instruct">Meta Llama 3.1 70B</option>
-                <option value="openai/gpt-4o-mini">OpenAI GPT-4o Mini</option>
-                <option value="openai/gpt-4o">OpenAI GPT-4o</option>
-                <option value="anthropic/claude-3.5-haiku">Anthropic Claude 3.5 Haiku</option>
-                <option value="anthropic/claude-3.5-sonnet">Anthropic Claude 3.5 Sonnet</option>
-                <option value="deepseek/deepseek-chat">DeepSeek Chat</option>
-                <option value="qwen/qwen-2.5-72b-instruct">Qwen 2.5 72B</option>
-                <option value="__custom__">Custom — enter model ID below</option>
+                <option value="google/gemini-2.0-flash-exp:free" selected>Google Gemini 2.0 Flash (FREE ⭐)</option>
+                <option value="google/gemini-flash-1.5-8b:free">Google Gemini Flash 1.5 8B (FREE)</option>
+                <option value="meta-llama/llama-3.3-70b-instruct:free">Meta Llama 3.3 70B (FREE)</option>
+                <option value="qwen/qwen-2.5-72b-instruct:free">Qwen 2.5 72B (FREE)</option>
+                <option value="google/gemini-2.0-flash-001">Google Gemini 2.0 Flash (PAID - Needs Credits)</option>
+                <option value="openai/gpt-4o-mini">OpenAI GPT-4o Mini (PAID)</option>
+                <option value="__custom__">Custom Model ID...</option>
             </select>
-            <input type="text" id="customModelInput" placeholder="e.g. google/gemini-2.0-pro-exp" style="display:none;margin-top:10px;">
+            <input type="text" id="customModelInput" placeholder="e.g. model/name:free" style="display:none;margin-top:10px;">
+            <div class="hint" style="color:var(--warn);margin-top:8px;"><i class="fa-solid fa-circle-exclamation"></i> <b>ඔයාගේ account එකේ credits නැත්නම් අනිවාර්යයෙන් :free තියෙන model එකක් තෝරන්න.</b></div>
         </div>
 
         <div class="grid-2">
@@ -834,96 +333,36 @@ input[type="color"]::-webkit-color-swatch{border:none;border-radius:6px;}
                 <label><i class="fa-solid fa-layer-group"></i> Batch Size</label>
                 <select id="batchSize">
                     <option value="15">15 — Safest</option>
-                    <option value="25">25 — Safe</option>
-                    <option value="40" selected>40 — Balanced</option>
-                    <option value="50">50 — Fast</option>
-                    <option value="80">80 — Aggressive</option>
+                    <option value="20">20 — Safe</option>
+                    <option value="30" selected>30 — Balanced</option>
+                    <option value="40">40 — Fast</option>
                 </select>
             </div>
             <div class="form-group">
                 <label><i class="fa-solid fa-code-branch"></i> Parallel Workers</label>
                 <select id="concurrency">
-                    <option value="2">2 — Safe</option>
-                    <option value="4">4 — Good</option>
-                    <option value="6" selected>6 — Fast ⭐</option>
-                    <option value="8">8 — Ultra</option>
-                    <option value="10">10 — Max</option>
+                    <option value="1">1 — Safe</option>
+                    <option value="2">2 — Good</option>
+                    <option value="3" selected>3 — Fast ⭐</option>
+                    <option value="5">5 — Ultra</option>
                 </select>
             </div>
         </div>
 
-        <button class="btn btn-gradient" onclick="saveSettings()">
-            <i class="fa-solid fa-floppy-disk"></i> Save Settings
-        </button>
-        <button class="btn btn-ghost" onclick="testConnection()">
-            <i class="fa-solid fa-plug-circle-check"></i> Test Connection
-        </button>
-
+        <button class="btn btn-gradient" onclick="saveSettings()"><i class="fa-solid fa-floppy-disk"></i> Save Settings</button>
+        <button class="btn btn-ghost" onclick="testConnection()"><i class="fa-solid fa-plug-circle-check"></i> Test Connection</button>
         <div id="testResult" style="margin-top:14px;"></div>
     </div>
-
-    <div class="instructions">
-        <h3><i class="fa-solid fa-lightbulb"></i> Speed Tips</h3>
-        <ol>
-            <li><b>Gemini 2.0 Flash</b> is the fastest + cheapest for Sinhala — recommended.</li>
-            <li>Higher <b>parallel workers</b> = faster, but may hit rate limits on free tier.</li>
-            <li>Larger <b>batch size</b> = fewer requests, but can fail on very long lines.</li>
-            <li>For 1000+ lines, use <b>Ultra Fast</b> preset — 5–10x faster than default.</li>
-        </ol>
-    </div>
 </section>
 
-<!-- ==================== ABOUT ==================== -->
+<!-- ABOUT -->
 <section id="page-about" class="page">
-    <div class="about-card">
-        <img class="avatar" src="https://res.cloudinary.com/divxgmr1g/image/upload/v1790246573/njsnhjvfi599swevo6ap.jpg" alt="Dasun Gimahana">
-        <h2>Dasun Gimahana</h2>
-        <div class="about-role">Founder &amp; Developer</div>
-
-        <p class="about-text">
-            <b>DG SUBZ PRO</b> is your personal OpenRouter-powered subtitle translator.
-            Built for natural spoken Sinhala output — the way real people talk.
-            Your API key, your files, your browser — <b>100% private</b>.
-        </p>
-
-        <div class="info-grid">
-            <div class="info-item">
-                <div class="info-item-icon wa"><i class="fa-brands fa-whatsapp"></i></div>
-                <div>
-                    <div class="lbl">WhatsApp</div>
-                    <div class="val"><a href="https://wa.me/94743277981" target="_blank">0743277981</a></div>
-                </div>
-            </div>
-            <div class="info-item">
-                <div class="info-item-icon"><i class="fa-solid fa-user"></i></div>
-                <div><div class="lbl">Name</div><div class="val">Dasun Gimahana</div></div>
-            </div>
-            <div class="info-item">
-                <div class="info-item-icon age"><i class="fa-solid fa-cake-candles"></i></div>
-                <div><div class="lbl">Age</div><div class="val">18 Years</div></div>
-            </div>
-            <div class="info-item">
-                <div class="info-item-icon loc"><i class="fa-solid fa-location-dot"></i></div>
-                <div><div class="lbl">From</div><div class="val">Kurunagala, Sri Lanka</div></div>
-            </div>
-        </div>
-
-        <div class="tags">
-            <span class="tag">🤖 OpenRouter AI</span>
-            <span class="tag">🗣️ Natural Sinhala</span>
-            <span class="tag">📦 SRT / ASS / ZIP</span>
-            <span class="tag">⚡ Batch Processing</span>
-            <span class="tag">🔒 100% Private</span>
-        </div>
+    <div class="container" style="text-align:center;">
+        <h2 style="font-family:'Poppins';margin-bottom:10px;">DG SUBZ PRO</h2>
+        <p style="color:var(--text-2);font-size:14px;line-height:1.8;">Built by Dasun Gimahana.<br>Your API key, your files, your browser — 100% private.</p>
     </div>
 </section>
-
 </main>
-
-<div class="footer">
-    DG Store &amp; Tech With Dasun &copy; 2026<br>
-    Made with <i class="fa-solid fa-heart" style="color:#ec4899"></i> in Sri Lanka
-</div>
 
 <div class="toast" id="toast"></div>
 
@@ -938,9 +377,7 @@ function showPage(id){
 function applyTheme(t){
     document.body.setAttribute('data-theme', t);
     const i = document.getElementById('themeIcon');
-    if(!i) return;
-    i.classList.toggle('fa-moon', t === 'dark');
-    i.classList.toggle('fa-sun', t === 'light');
+    if(i){ i.classList.toggle('fa-moon', t === 'dark'); i.classList.toggle('fa-sun', t === 'light'); }
 }
 function toggleTheme(){
     const next = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -949,28 +386,20 @@ function toggleTheme(){
 }
 (function(){ try{ applyTheme(localStorage.getItem('dgsubz-theme') || 'light'); }catch(e){ applyTheme('light'); } })();
 
-/* ==================== TOAST ==================== */
 function toast(msg, type){
     const el = document.getElementById('toast');
     el.textContent = msg;
     el.className = 'toast show' + (type ? ' '+type : '');
     clearTimeout(el._t);
-    el._t = setTimeout(()=>el.classList.remove('show'), 3500);
+    el._t = setTimeout(()=>el.classList.remove('show'), 4000);
 }
 
 /* ==================== SETTINGS ==================== */
-const DEFAULT_SETTINGS = {
-    apiKey:'',
-    model:'google/gemini-2.0-flash-001',
-    customModel:'',
-    batchSize:40,
-    concurrency:6,
-    preset:'balanced'
-};
+const DEFAULT_SETTINGS = { apiKey:'', model:'google/gemini-2.0-flash-exp:free', customModel:'', batchSize:30, concurrency:3, preset:'balanced' };
 const PRESETS = {
-    ultra:    { model:'google/gemini-2.0-flash-001', batchSize:50, concurrency:8 },
-    balanced: { model:'google/gemini-2.0-flash-001', batchSize:40, concurrency:6 },
-    quality:  { model:'openai/gpt-4o-mini',          batchSize:25, concurrency:4 }
+    ultra:    { model:'google/gemini-2.0-flash-exp:free', batchSize:40, concurrency:5 },
+    balanced: { model:'google/gemini-2.0-flash-exp:free', batchSize:30, concurrency:3 },
+    quality:  { model:'google/gemini-2.0-flash-exp:free', batchSize:20, concurrency:2 }
 };
 let SETTINGS = { ...DEFAULT_SETTINGS };
 
@@ -992,12 +421,10 @@ function loadSettings(){
     document.querySelectorAll('.preset').forEach(p=>p.classList.toggle('active', p.dataset.preset === SETTINGS.preset));
     refreshKeyWarning();
 }
-
 function toggleCustomModel(){
     const sel = document.getElementById('modelSelect');
     document.getElementById('customModelInput').style.display = sel.value === '__custom__' ? 'block' : 'none';
 }
-
 function applyPreset(name){
     const p = PRESETS[name];
     if(!p) return;
@@ -1005,205 +432,139 @@ function applyPreset(name){
     document.getElementById('batchSize').value = String(p.batchSize);
     document.getElementById('concurrency').value = String(p.concurrency);
     document.querySelectorAll('.preset').forEach(el=>el.classList.toggle('active', el.dataset.preset === name));
-    toast(name.charAt(0).toUpperCase()+name.slice(1) + ' preset applied', 'success');
     saveSettings();
 }
-
 function saveSettings(){
     const apiKey = document.getElementById('apiKeyInput').value.trim();
     const sel = document.getElementById('modelSelect').value;
     const customModel = document.getElementById('customModelInput').value.trim();
-    const model = sel === '__custom__' ? (customModel || 'google/gemini-2.0-flash-001') : sel;
-    const batchSize = parseInt(document.getElementById('batchSize').value, 10) || 40;
-    const concurrency = parseInt(document.getElementById('concurrency').value, 10) || 6;
+    const model = sel === '__custom__' ? (customModel || 'google/gemini-2.0-flash-exp:free') : sel;
+    const batchSize = parseInt(document.getElementById('batchSize').value, 10) || 30;
+    const concurrency = parseInt(document.getElementById('concurrency').value, 10) || 3;
     const activePreset = document.querySelector('.preset.active');
-    const preset = activePreset ? activePreset.dataset.preset : 'balanced';
-
-    SETTINGS = { apiKey, model, customModel, batchSize, concurrency, preset };
+    
+    SETTINGS = { apiKey, model, customModel, batchSize, concurrency, preset: activePreset ? activePreset.dataset.preset : 'balanced' };
     try{
         localStorage.setItem('dgsubz-settings', JSON.stringify(SETTINGS));
         toast('Settings saved ✅', 'success');
     }catch(e){ toast('Failed to save', 'error'); }
     refreshKeyWarning();
 }
-
 function refreshKeyWarning(){
     const w = document.getElementById('keyWarning');
-    if(!w) return;
-    w.style.display = SETTINGS.apiKey ? 'none' : 'block';
+    if(w) w.style.display = SETTINGS.apiKey ? 'none' : 'block';
 }
-
 function getActiveModel(){
     const sel = document.getElementById('modelSelect').value;
-    return sel === '__custom__'
-        ? (document.getElementById('customModelInput').value.trim() || SETTINGS.customModel)
-        : sel;
+    return sel === '__custom__' ? (document.getElementById('customModelInput').value.trim() || SETTINGS.customModel) : sel;
 }
 
 async function testConnection(){
     const apiKey = document.getElementById('apiKeyInput').value.trim();
     const model = getActiveModel();
     const out = document.getElementById('testResult');
-
-    if(!apiKey){ out.innerHTML = '<div class="status err"><i class="fa-solid fa-xmark"></i> API key required</div>'; return; }
-    if(!model){ out.innerHTML = '<div class="status err"><i class="fa-solid fa-xmark"></i> Model required</div>'; return; }
-
+    if(!apiKey || !model){ out.innerHTML = '<div class="status err"><i class="fa-solid fa-xmark"></i> API key & model required</div>'; return; }
+    
     out.innerHTML = '<div class="status warn"><i class="fa-solid fa-spinner fa-spin"></i> Testing connection...</div>';
-
     try{
-        const reply = await callOpenRouter(apiKey, model,
-            'You are a translation test. Reply with ONLY the Sinhala word for "Hello".',
-            'Hello', 0.2, 30
-        );
+        const reply = await callOpenRouter(apiKey, model, 'Reply with ONLY the word: Hello', 'Test', 0.2, 30);
         out.innerHTML = `<div class="status ok"><i class="fa-solid fa-check"></i> Connected — "${reply.trim().slice(0,60)}"</div>`;
     }catch(e){
         out.innerHTML = `<div class="status err"><i class="fa-solid fa-xmark"></i> ${(e.message||'Failed').replace(/</g,'&lt;')}</div>`;
     }
 }
 
-/* ==================== OPENROUTER API (FAST) ==================== */
+/* ==================== API CALL ==================== */
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
-async function callOpenRouter(apiKey, model, systemPrompt, userPrompt, temperature, maxTokens, retries){
-    if(retries === undefined) retries = 1; // fewer retries = faster
+async function callOpenRouter(apiKey, model, systemPrompt, userPrompt, temperature, maxTokens){
     const body = {
-        model,
-        messages:[
-            { role:'system', content:systemPrompt },
-            { role:'user', content:userPrompt }
-        ],
-        temperature: temperature !== undefined ? temperature : 0.3,
-        max_tokens: maxTokens || 4000
+        model, messages:[{ role:'system', content:systemPrompt }, { role:'user', content:userPrompt }],
+        temperature: temperature !== undefined ? temperature : 0.3, max_tokens: maxTokens || 4000
     };
 
-    let lastErr = null;
-    for(let attempt = 0; attempt <= retries; attempt++){
-        try{
-            const ctrl = new AbortController();
-            const timeout = setTimeout(()=>ctrl.abort(), 30000); // 30s timeout (was 60)
+    const ctrl = new AbortController();
+    const timeout = setTimeout(()=>ctrl.abort(), 45000); // 45s timeout
 
-            const resp = await fetch(OPENROUTER_URL, {
-                method:'POST',
-                headers:{
-                    'Authorization':`Bearer ${apiKey}`,
-                    'Content-Type':'application/json',
-                    'HTTP-Referer': location.href,
-                    'X-Title':'DG SUBZ Pro'
-                },
-                body: JSON.stringify(body),
-                signal: ctrl.signal
-            });
-            clearTimeout(timeout);
+    try {
+        const resp = await fetch(OPENROUTER_URL, {
+            method:'POST',
+            headers:{ 'Authorization':`Bearer ${apiKey}`, 'Content-Type':'application/json', 'HTTP-Referer': location.href, 'X-Title':'DG SUBZ Pro' },
+            body: JSON.stringify(body), signal: ctrl.signal
+        });
+        clearTimeout(timeout);
 
-            if(resp.status === 429){
-                lastErr = new Error('Rate limited');
-                if(attempt < retries) await new Promise(r=>setTimeout(r, 1500 * (attempt+1)));
-                continue;
-            }
-
-            if(!resp.ok){
-                const txt = await resp.text();
-                let detail = txt;
-                try{ const j = JSON.parse(txt); detail = (j.error && (j.error.message || j.error)) || txt; }catch(_){}
-                throw new Error(`HTTP ${resp.status}: ${String(detail).slice(0,150)}`);
-            }
-
-            const data = await resp.json();
-            const txt = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
-            if(!txt) throw new Error('Empty response');
-            return txt;
-        }catch(err){
-            lastErr = err;
-            if(attempt < retries) await new Promise(r=>setTimeout(r, 400 * (attempt+1)));
+        if(!resp.ok){
+            const txt = await resp.text();
+            let msg = txt;
+            try { const j = JSON.parse(txt); msg = j.error?.message || JSON.stringify(j.error) || txt; } catch(e){}
+            
+            // වැදගත්: Error එක ලස්සනට පෙන්නන්න
+            if (resp.status === 402) throw new Error('Insufficient Credits (402). Use a :free model.');
+            if (resp.status === 401) throw new Error('Invalid API Key (401).');
+            if (resp.status === 429) throw new Error('Rate Limit Exceeded (429). Try lowering Parallel Workers.');
+            throw new Error(`API Error ${resp.status}: ${msg.slice(0,100)}`);
         }
+
+        const data = await resp.json();
+        const txt = data.choices?.[0]?.message?.content;
+        if(!txt) throw new Error('Empty response from AI');
+        return txt;
+
+    } catch(err) {
+        clearTimeout(timeout);
+        throw err;
     }
-    throw lastErr || new Error('API failed');
 }
 
 /* ==================== PROMPTS ==================== */
 function buildSystemPrompt(lang){
     if(lang === 'si'){
-        return `You translate English subtitle lines into NATURAL SPOKEN SINHALA (කතා කරන සිංහල) — how real Sri Lankans speak in movies/TV, NOT formal/literary Sinhala.
-
-STYLE RULES:
-• USE colloquial verbs: කළා, ගියා, ආවා, ඉන්නවා, කියනවා, හිටියා, බලනවා, දෙනවා, ගන්නවා, වුණා, තියෙනවා, පුළුවන්, ඕනේ, නැහැ, බැහැ, ඉවරයි
-• AVOID formal: කළේය, ගියේය, ආවේය, සිටී, කියයි, කරයි, දෙයි, විය, වේ, ඇත, හැකිය, නැත
-• USE spoken connectors: හින්දා, විදියට, දිහා, ලඟට, විතරයි, ඕනේ, පුළුවන්
-• Match emotional tone (casual, angry, romantic, funny)
-• Translate idioms naturally
-
-SPECIAL:
-• Oh!→අයියෝ!, Wow!→වාව්!, Hey→ඒයි!, What?!→මොකක්ද?!
-• Keep proper names (transliterate if common)
-• Lines with only symbols/numbers/[MUSIC]/... → return UNCHANGED
-
-OUTPUT (STRICT):
-Return ONLY numbered lines "1. text", exact same count as input, no preamble, no markdown, pure Sinhala script.`;
+        return `You translate English subtitle lines into NATURAL SPOKEN SINHALA (කතා කරන සිංහල).
+STYLE RULES: USE colloquial verbs (කළා, ගියා, ඉන්නවා, කියනවා, හිටියා, වුණා, තියෙනවා, පුළුවන්, ඕනේ, නැහැ). AVOID formal (කළේය, ගියේය, සිටී, කියයි, විය, වේ, ඇත, හැකිය, නැත). USE spoken connectors (හින්දා, විදියට, දිහා, විතරයි, ඕනේ).
+OUTPUT STRICT: Return ONLY numbered lines "1. text", exact same count, pure Sinhala script, no explanations.`;
     }
-    if(lang === 'si_formal'){
-        return `You translate to formal/literary Sinhala (ලිඛිත සිංහල). Return ONLY numbered lines "1. text". No explanations. Preserve proper names.`;
-    }
-    if(lang === 'en') return `Translate to English. Return ONLY numbered lines "1. text". No explanations.`;
-    if(lang === 'ta') return `Translate to natural spoken Tamil. Return ONLY numbered lines "1. text". No explanations.`;
-    if(lang === 'hi') return `Translate to natural spoken Hindi. Return ONLY numbered lines "1. text". No explanations.`;
-    return `Translate to target language. Return ONLY numbered lines "1. text".`;
+    if(lang === 'si_formal') return `Translate to formal Sinhala. Return ONLY numbered lines "1. text".`;
+    if(lang === 'en') return `Translate to English. Return ONLY numbered lines "1. text".`;
+    if(lang === 'ta') return `Translate to natural Tamil. Return ONLY numbered lines "1. text".`;
+    return `Translate. Return ONLY numbered lines "1. text".`;
 }
 
 function buildUserPrompt(lines, lang){
-    const name = { si:'natural spoken Sinhala', si_formal:'formal Sinhala', en:'English', ta:'Tamil', hi:'Hindi' }[lang] || 'target language';
-    const numbered = lines.map((l,i)=>`${i+1}. ${l}`).join('\n');
-    return `Translate each numbered line to ${name}. Return ONLY the numbered lines, exact count. Do not skip.\n\n${numbered}`;
+    const name = { si:'natural spoken Sinhala', si_formal:'formal Sinhala', en:'English', ta:'Tamil' }[lang] || 'target language';
+    return `Translate each line to ${name}. Return ONLY numbered lines. Do not skip.\n\n${lines.map((l,i)=>`${i+1}. ${l}`).join('\n')}`;
 }
 
-/* ==================== RESPONSE PARSER ==================== */
 function parseNumberedResponse(text, expectedCount){
     if(!text) return null;
     text = text.replace(/```[a-z]*\n?/gi,'').replace(/```/g,'');
-    const lines = text.split('\n');
     const result = new Array(expectedCount).fill(null);
     let curIdx = -1, buf = [];
 
-    function flush(){
-        if(curIdx >= 0 && curIdx < expectedCount && buf.length){
-            result[curIdx] = buf.join(' ').trim();
-        }
-        buf = [];
-    }
-
-    for(const raw of lines){
+    for(const raw of text.split('\n')){
         const line = raw.trim();
         if(!line) continue;
         const m = line.match(/^(\d+)\s*[\.\)\:]\s*(.*)$/);
         if(m){
-            flush();
+            if(curIdx >= 0 && curIdx < expectedCount && buf.length) result[curIdx] = buf.join(' ').trim();
             const n = parseInt(m[1],10);
-            if(n >= 1 && n <= expectedCount){ curIdx = n-1; buf = [m[2]]; }
-            else curIdx = -1;
+            if(n >= 1 && n <= expectedCount){ curIdx = n-1; buf = [m[2]]; } else curIdx = -1;
         } else if(curIdx >= 0){ buf.push(line); }
     }
-    flush();
+    if(curIdx >= 0 && curIdx < expectedCount && buf.length) result[curIdx] = buf.join(' ').trim();
 
     if(result.every(r=>typeof r === 'string' && r.length > 0)) return result;
     return null;
 }
 
 /* ==================== FILE I/O ==================== */
-function readFileAsync(file){
-    return new Promise((res, rej)=>{
-        const r = new FileReader();
-        r.onload = e => res(e.target.result);
-        r.onerror = e => rej(e);
-        r.readAsText(file);
-    });
-}
+function readFileAsync(file){ return new Promise((res, rej)=>{ const r = new FileReader(); r.onload = e => res(e.target.result); r.onerror = e => rej(e); r.readAsText(file); }); }
 
 async function expandFiles(filesArray, progressCb){
     const out = [];
     for(let fi=0; fi<filesArray.length; fi++){
-        const f = filesArray[fi];
-        const lower = f.name.toLowerCase();
+        const f = filesArray[fi]; const lower = f.name.toLowerCase();
         if(progressCb) progressCb(`Reading ${fi+1}/${filesArray.length}: ${f.name}`);
-
         if(lower.endsWith('.zip')){
             try{
                 const zip = await JSZip.loadAsync(f);
@@ -1227,7 +588,6 @@ async function expandFiles(filesArray, progressCb){
 async function showFileName(input){
     const display = document.getElementById('fileNameDisplay');
     if(!input.files.length){ display.innerHTML = ''; return; }
-
     let html = `<b>Selected (${input.files.length}):</b><br>`;
     for(const f of input.files) html += '• ' + f.name + '<br>';
     display.innerHTML = html;
@@ -1238,51 +598,34 @@ async function showFileName(input){
             try{
                 const zip = await JSZip.loadAsync(file);
                 const names = [];
-                Object.entries(zip.files).forEach(([path, e])=>{
-                    if(!e.dir && /\.(srt|ass)$/i.test(path)) names.push(path.split('/').pop());
-                });
-                if(names.length){
-                    total += names.length;
-                    html += `<div class="zip-info">📦 ${file.name} → ${names.length} subtitle file(s):</div>`;
-                    names.forEach(n => html += `<div class="zip-sub">› ${n}</div>`);
-                }
+                Object.entries(zip.files).forEach(([path, e])=>{ if(!e.dir && /\.(srt|ass)$/i.test(path)) names.push(path.split('/').pop()); });
+                if(names.length){ total += names.length; html += `<div class="zip-info">📦 ${file.name} → ${names.length} files:</div>`; names.forEach(n => html += `<div class="zip-sub">› ${n}</div>`); }
             }catch(e){}
         }
     }
-    if(total) html += `<div class="zip-info">✅ Total: ${total} subtitle file(s) ready</div>`;
+    if(total) html += `<div class="zip-info">✅ Total: ${total} ready</div>`;
     display.innerHTML = html;
 }
 
-/* ==================== ASS STYLE HELPERS ==================== */
-function hexToRgbAss(hex){
-    const c = hex.replace('#','');
-    return `&H00${c.substring(4,6)}${c.substring(2,4)}${c.substring(0,2)}&`.toUpperCase();
-}
-
+/* ==================== ASS HELPERS ==================== */
+function hexToRgbAss(hex){ const c = hex.replace('#',''); return `&H00${c.substring(4,6)}${c.substring(2,4)}${c.substring(0,2)}&`.toUpperCase(); }
 function insertAssWatermark(outLines, wm){
     if(!wm) return outLines;
     let eventsIdx = -1;
     for(let i=0;i<outLines.length;i++) if(outLines[i].trim() === '[Events]') eventsIdx = i;
     if(eventsIdx < 0) return outLines;
-
     let fmtIdx = -1;
-    for(let i=eventsIdx+1;i<outLines.length;i++){
-        if(outLines[i].trim().startsWith('Format:')){ fmtIdx = i; break; }
-    }
+    for(let i=eventsIdx+1;i<outLines.length;i++){ if(outLines[i].trim().startsWith('Format:')){ fmtIdx = i; break; } }
     const a = `Dialogue: 0,0:00:01.00,0:00:05.00,Default,,0,0,0,,{\\an8\\c&H00FFCC&\\fs20\\bord1}${wm}`;
-    const b = `Dialogue: 0,99:59:50.00,99:59:59.00,Default,,0,0,0,,{\\an8\\cH00FFCC&\\fs20\\bord1}${wm}`;
-    if(fmtIdx >= 0){ outLines.splice(fmtIdx+1, 0, a); outLines.push(b); }
-    else outLines.push(a, b);
+    const b = `Dialogue: 0,99:59:50.00,99:59:59.00,Default,,0,0,0,,{\\an8\\c&H00FFCC&\\fs20\\bord1}${wm}`;
+    if(fmtIdx >= 0){ outLines.splice(fmtIdx+1, 0, a); outLines.push(b); } else outLines.push(a, b);
     return outLines;
 }
 
-/* ==================== MAIN TRANSLATION (FAST + DEDUP) ==================== */
-let translatedZipBlob = null;
+function hasSinhala(s){ return /[\u0D80-\u0DFF]/.test(s); }
 
-/* Sinhala Unicode range detection */
-function hasSinhala(s){
-    return /[\u0D80-\u0DFF]/.test(s);
-}
+/* ==================== MAIN TRANSLATOR ==================== */
+let translatedZipBlob = null;
 
 async function startTranslation(){
     const fileInput = document.getElementById('subFile');
@@ -1306,8 +649,7 @@ async function startTranslation(){
     const statTime = document.getElementById('statTime');
 
     if(!SETTINGS.apiKey){ toast('Set your API key in Settings first!', 'error'); showPage('settings'); return; }
-    if(!getActiveModel()){ toast('Choose a model in Settings!', 'error'); showPage('settings'); return; }
-    if(!fileInput.files.length){ toast('Select .srt / .ass / .zip files first!', 'error'); return; }
+    if(!fileInput.files.length){ toast('Select files first!', 'error'); return; }
 
     translatedZipBlob = null;
     btnText.textContent = 'Reading files...';
@@ -1318,30 +660,22 @@ async function startTranslation(){
     progressBar.style.width = '0%';
     progressPct.textContent = '0%';
     progressStage.textContent = 'Preparing...';
-    statLines.textContent = '0 lines';
-    statDedup.textContent = '0 saved';
     statTime.textContent = '~0s left';
 
     const apiKey = SETTINGS.apiKey;
     const model = getActiveModel();
-    const batchSize = SETTINGS.batchSize || 40;
-    const concurrency = SETTINGS.concurrency || 6;
-
-    const isBold = fontStyle === 'bold' || fontStyle === 'bolditalic';
-    const isItalic = fontStyle === 'italic' || fontStyle === 'bolditalic';
+    const batchSize = SETTINGS.batchSize || 30;
+    const concurrency = SETTINGS.concurrency || 3;
+    const isBold = fontStyle === 'bold';
+    const isItalic = fontStyle === 'italic';
     const startedAt = Date.now();
 
     try{
-        /* -------- STEP 1: Expand files -------- */
         const workFiles = await expandFiles(Array.from(fileInput.files), msg => { btnText.textContent = msg; });
-        if(!workFiles.length){
-            toast('No valid subtitle files found.', 'error');
-            reset(); return;
-        }
+        if(!workFiles.length) throw new Error('No valid subtitle files found.');
 
-        /* -------- STEP 2: Collect all lines + dedup -------- */
         progressStage.textContent = 'Extracting lines...';
-        const allJobs = []; // { fi, li, text, parts }
+        const allJobs = [];
         for(let fi=0; fi<workFiles.length; fi++){
             const wf = workFiles[fi];
             wf.lines = wf.content.replace(/\r\n/g,'\n').split('\n');
@@ -1352,12 +686,8 @@ async function startTranslation(){
                     if(line.startsWith('Dialogue:')){
                         const parts = line.split(',');
                         if(parts.length >= 10){
-                            const raw = parts.slice(9).join(',');
-                            const clean = raw.replace(/\{[^}]*\}/g,'').trim();
-                            if(clean.length > 0){
-                                wf.jobIdxs.push(allJobs.length);
-                                allJobs.push({ fi, li, text: clean, parts });
-                            }
+                            const clean = parts.slice(9).join(',').replace(/\{[^}]*\}/g,'').trim();
+                            if(clean.length > 0){ wf.jobIdxs.push(allJobs.length); allJobs.push({ fi, li, text: clean, parts }); }
                         }
                     }
                 }
@@ -1365,8 +695,7 @@ async function startTranslation(){
                 for(let li=0; li<wf.lines.length; li++){
                     const t = wf.lines[li].trim();
                     if(t !== '' && isNaN(t) && !t.includes('-->')){
-                        wf.jobIdxs.push(allJobs.length);
-                        allJobs.push({ fi, li, text: t, parts: null });
+                        wf.jobIdxs.push(allJobs.length); allJobs.push({ fi, li, text: t, parts: null });
                     }
                 }
             }
@@ -1374,101 +703,70 @@ async function startTranslation(){
 
         const totalLines = allJobs.length;
         statLines.textContent = totalLines.toLocaleString() + ' lines';
+        if(totalLines === 0) throw new Error('No text found to translate.');
 
-        if(totalLines === 0){
-            // Just repackage with watermark
-            await repackageOnly(workFiles, watermark);
-            return;
-        }
-
-        /* -------- STEP 3: Dedup — skip lines already in Sinhala & pure-symbol lines -------- */
         progressStage.textContent = 'Deduplicating...';
-        const uniqueTexts = new Map(); // text → index
-        const toTranslate = [];         // unique strings
-        const needsTranslate = new Array(totalLines).fill(true);
+        const uniqueTexts = new Map();
+        const toTranslate = [];
+        const lineToUnique = new Array(totalLines);
 
-        // Group identical lines
-        const lineToUnique = new Array(totalLines); // text-index → unique index
         for(let i=0; i<totalLines; i++){
             const t = allJobs[i].text;
-            // Skip if already Sinhala or pure symbols
-            if(targetLang.startsWith('si') && hasSinhala(t)){
-                needsTranslate[i] = false;
-                lineToUnique[i] = -1;
-                continue;
-            }
-            if(!/[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF\u0900-\u097F]/.test(t)){
-                needsTranslate[i] = false;
-                lineToUnique[i] = -1;
-                continue;
-            }
+            if(targetLang.startsWith('si') && hasSinhala(t)) { lineToUnique[i] = -1; continue; }
+            if(!/[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF\u0900-\u097F]/.test(t)) { lineToUnique[i] = -1; continue; }
+            
             if(uniqueTexts.has(t)){ lineToUnique[i] = uniqueTexts.get(t); }
-            else {
-                const idx = toTranslate.length;
-                uniqueTexts.set(t, idx);
-                toTranslate.push(t);
-                lineToUnique[i] = idx;
-            }
+            else { const idx = toTranslate.length; uniqueTexts.set(t, idx); toTranslate.push(t); lineToUnique[i] = idx; }
         }
 
         const uniqueCount = toTranslate.length;
         const savedCount = totalLines - uniqueCount;
         statDedup.textContent = savedCount > 0 ? `${savedCount} saved (${Math.round(savedCount/totalLines*100)}%)` : '0 saved';
 
-        if(uniqueCount === 0){
-            // Everything was already translatable
-            await repackageOnly(workFiles, watermark);
-            return;
-        }
+        if(uniqueCount === 0) throw new Error('All lines are already translated or empty.');
 
-        /* -------- STEP 4: Batch unique texts -------- */
         const batches = [];
-        for(let i=0; i<uniqueCount; i+=batchSize){
-            batches.push({ start: i, texts: toTranslate.slice(i, i+batchSize) });
-        }
+        for(let i=0; i<uniqueCount; i+=batchSize){ batches.push({ start: i, texts: toTranslate.slice(i, i+batchSize) }); }
         const totalBatches = batches.length;
-
-        /* -------- STEP 5: Translate in parallel with recursive split fallback -------- */
         const systemPrompt = buildSystemPrompt(targetLang);
         const translations = new Array(uniqueCount).fill(null);
-        let completedBatches = 0;
-        let completedLines = 0;
+        let completedBatches = 0, completedLines = 0;
 
         function updateProgress(){
             const pct = Math.round((completedLines / uniqueCount) * 100);
             progressBar.style.width = pct + '%';
             progressPct.textContent = pct + '%';
             const elapsed = (Date.now() - startedAt) / 1000;
-            const done = completedLines || 1;
-            const eta = Math.max(0, (elapsed / done) * (uniqueCount - completedLines));
+            const eta = Math.max(0, (elapsed / (completedLines || 1)) * (uniqueCount - completedLines));
             statTime.textContent = eta > 0 ? `~${Math.ceil(eta)}s left` : 'finishing...';
             btnText.textContent = `Translating ${completedLines}/${uniqueCount} (${pct}%)`;
         }
 
         async function translateBatch(texts){
-            // Try whole batch
-            try{
-                const resp = await callOpenRouter(apiKey, model, systemPrompt,
-                    buildUserPrompt(texts, targetLang), 0.3, 4000);
+            // API එකෙන් Error එකක් ආවොත් කෙලින්ම ඒක අල්ලගන්නවා (silent fail වෙන්න දෙන්නේ නෑ)
+            try {
+                const resp = await callOpenRouter(apiKey, model, systemPrompt, buildUserPrompt(texts, targetLang), 0.3, 4000);
                 const parsed = parseNumberedResponse(resp, texts.length);
                 if(parsed) return parsed;
-            }catch(e){
-                console.warn('Batch failed, splitting:', e.message);
+            } catch(e) {
+                // API Error (Credits, Rate limit etc.) නම් කෙලින්ම throw කරන්න
+                if (e.message.includes('API Error') || e.message.includes('Credits') || e.message.includes('Rate Limit') || e.message.includes('API Key')) {
+                    throw e; 
+                }
+                console.warn('Parsing failed, splitting:', e.message);
             }
 
             if(texts.length === 1){
-                // Last resort — single line
-                try{
-                    const resp = await callOpenRouter(apiKey, model,
-                        buildSystemPrompt(targetLang) + '\nReturn ONLY the translation, no numbers.',
-                        texts[0], 0.3, 300);
+                try {
+                    const resp = await callOpenRouter(apiKey, model, buildSystemPrompt(targetLang) + '\nReturn ONLY the translation.', texts[0], 0.3, 300);
                     const clean = (resp||'').trim().replace(/^\d+[\.\)]\s*/,'').replace(/^"|"$/g,'');
                     if(clean) return [clean];
-                }catch(_){}
-                return [texts[0]]; // keep original
+                } catch(e) { 
+                    if (e.message.includes('API Error') || e.message.includes('Credits') || e.message.includes('Rate Limit')) throw e;
+                }
+                return [texts[0]];
             }
 
-            // Split in half and retry
             const mid = Math.floor(texts.length / 2);
             const left = await translateBatch(texts.slice(0, mid));
             const right = await translateBatch(texts.slice(mid));
@@ -1482,11 +780,8 @@ async function startTranslation(){
                 if(bi >= totalBatches) return;
                 const b = batches[bi];
                 progressStage.textContent = `Batch ${bi+1}/${totalBatches}`;
-
                 const results = await translateBatch(b.texts);
-                for(let k=0; k<results.length; k++){
-                    translations[b.start + k] = results[k];
-                }
+                for(let k=0; k<results.length; k++) translations[b.start + k] = results[k];
                 completedBatches++;
                 completedLines += b.texts.length;
                 updateProgress();
@@ -1497,7 +792,6 @@ async function startTranslation(){
         for(let w=0; w<Math.min(concurrency, totalBatches); w++) workers.push(worker());
         await Promise.all(workers);
 
-        /* -------- STEP 6: Rebuild output files -------- */
         progressStage.textContent = 'Building files...';
         btnText.textContent = 'Building ZIP...';
 
@@ -1530,10 +824,8 @@ async function startTranslation(){
             }
 
             let final;
-            if(wf.isAss){
-                insertAssWatermark(outLines, watermark);
-                final = outLines.join('\n');
-            } else {
+            if(wf.isAss){ insertAssWatermark(outLines, watermark); final = outLines.join('\n'); }
+            else {
                 const intro = watermark ? `\n1\n00:00:01,000 --> 00:00:04,000\n<font color='#00ffcc'>[ ${watermark} ]</font>\n\n` : '';
                 const outro = watermark ? `\n\n9999\n99:59:58,000 --> 99:59:59,000\n<font color='#00ffcc'>[ ${watermark} ]</font>\n` : '';
                 final = intro + outLines.join('\n') + outro;
@@ -1549,61 +841,24 @@ async function startTranslation(){
 
         translatedZipBlob = await outZip.generateAsync({ type:'blob' });
 
-        progressBar.style.width = '100%';
-        progressPct.textContent = '100%';
+        progressBar.style.width = '100%'; progressPct.textContent = '100%';
         progressStage.textContent = 'Complete!';
         statTime.textContent = `Done in ${Math.ceil((Date.now()-startedAt)/1000)}s`;
         btnText.textContent = `Done! (${workFiles.length} file${workFiles.length>1?'s':''})`;
-        spinner.style.display = 'none';
-        transBtn.disabled = false;
+        spinner.style.display = 'none'; transBtn.disabled = false;
         downloadBtn.classList.add('show');
-        toast(`Translated ${uniqueCount} unique lines across ${workFiles.length} file(s) in ${Math.ceil((Date.now()-startedAt)/1000)}s 🚀`, 'success');
+        toast(`Translated successfully in ${Math.ceil((Date.now()-startedAt)/1000)}s 🚀`, 'success');
 
     }catch(err){
         console.error(err);
-        toast('Translation failed: ' + (err.message || 'Unknown'), 'error');
-        reset();
-    }finally{
-        spinner.style.display = 'none';
+        // Error එක කෙලින්ම යූසර්ට පෙන්නනවා
+        toast('FAILED: ' + (err.message || 'Unknown error'), 'error');
+        progressStage.textContent = 'Error occurred!';
+        progressStage.style.color = 'var(--danger)';
+        document.getElementById('transBtnText').textContent = 'Try Again';
+        spinner.style.display = 'none'; 
         transBtn.disabled = false;
     }
-
-    function reset(){
-        btnText.textContent = 'Translate Files';
-        spinner.style.display = 'none';
-        transBtn.disabled = false;
-        progressWrap.classList.remove('show');
-    }
-}
-
-async function repackageOnly(workFiles, watermark){
-    const outZip = new JSZip();
-    const usedNames = {};
-    for(const wf of workFiles){
-        const outLines = wf.lines.slice();
-        let final;
-        if(wf.isAss){
-            insertAssWatermark(outLines, watermark);
-            final = outLines.join('\n');
-        } else {
-            const intro = watermark ? `\n1\n00:00:01,000 --> 00:00:04,000\n<font color='#00ffcc'>[ ${watermark} ]</font>\n\n` : '';
-            const outro = watermark ? `\n\n9999\n99:59:58,000 --> 99:59:59,000\n<font color='#00ffcc'>[ ${watermark} ]</font>\n` : '';
-            final = intro + outLines.join('\n') + outro;
-        }
-        const ext = wf.isAss ? '.ass' : '.srt';
-        const base = wf.name.replace(/\.(srt|ass)$/i,'');
-        let outName = base + '_DG' + ext;
-        if(usedNames[outName]){ usedNames[outName]++; outName = base + '_DG_' + usedNames[outName] + ext; }
-        else usedNames[outName] = 1;
-        outZip.file(outName, final);
-    }
-    translatedZipBlob = await outZip.generateAsync({ type:'blob' });
-
-    document.getElementById('transBtnText').textContent = 'Done!';
-    document.getElementById('transSpinner').style.display = 'none';
-    document.getElementById('transBtn').disabled = false;
-    document.getElementById('downloadBtn').classList.add('show');
-    toast('No text to translate — files repackaged with watermark.', 'warn');
 }
 
 function downloadTranslatedFile(){
@@ -1611,19 +866,12 @@ function downloadTranslatedFile(){
     const a = document.createElement('a');
     a.href = URL.createObjectURL(translatedZipBlob);
     a.download = 'DG_Translated_Subtitles.zip';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
     toast('ZIP downloaded ✅', 'success');
 }
 
-/* ==================== INIT ==================== */
-document.addEventListener('DOMContentLoaded', ()=>{
-    loadSettings();
-    refreshKeyWarning();
-});
+document.addEventListener('DOMContentLoaded', ()=>{ loadSettings(); refreshKeyWarning(); });
 </script>
-
 </body>
 </html>
