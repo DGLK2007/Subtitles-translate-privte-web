@@ -445,10 +445,15 @@ async function testConnection(){
     }
 }
 
-/* ==================== GOOGLE GEMINI API CALL (JSON MODE) ==================== */
-const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+/* ==================== GOOGLE GEMINI API CALL (UPDATED MODELS) ==================== */
+// New models available for fresh API keys
+const GEMINI_MODELS = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-flash-latest'];
+let currentModelIndex = 0;
 
-async function callGeminiAPI(apiKey, systemPrompt, userPrompt, temperature, maxTokens){
+async function callGeminiAPI(apiKey, systemPrompt, userPrompt, temperature, maxTokens, retry = true){
+    const modelName = GEMINI_MODELS[currentModelIndex];
+    const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent`;
+
     const body = {
         contents: [{ role: "user", parts: [{ text: userPrompt }] }],
         systemInstruction: { parts: [{ text: systemPrompt }] },
@@ -479,6 +484,13 @@ async function callGeminiAPI(apiKey, systemPrompt, userPrompt, temperature, maxT
             let msg = txt;
             try { const j = JSON.parse(txt); msg = j.error?.message || JSON.stringify(j.error) || txt; } catch(e){}
             
+            // 404 වැරැද්දක් ආවොත් ඊළඟ මොඩල් එකට මාරු වෙන්න
+            if (resp.status === 404 && retry && currentModelIndex < GEMINI_MODELS.length - 1) {
+                console.warn(`Model ${modelName} not found, trying fallback...`);
+                currentModelIndex++;
+                return callGeminiAPI(apiKey, systemPrompt, userPrompt, temperature, maxTokens, true);
+            }
+
             if (resp.status === 429) throw new Error('Rate Limit Exceeded (429). Try lowering Parallel Workers.');
             if (resp.status === 400) throw new Error('Bad Request (400): ' + msg.slice(0, 100));
             if (resp.status === 403) throw new Error('Forbidden (403). Check your API Key.');
@@ -487,7 +499,6 @@ async function callGeminiAPI(apiKey, systemPrompt, userPrompt, temperature, maxT
 
         const data = await resp.json();
         
-        // Debugging: Log full response if empty
         if (!data.candidates || data.candidates.length === 0) {
             console.error("Full API Response:", data);
             if (data.promptFeedback && data.promptFeedback.blockReason) {
@@ -530,7 +541,6 @@ function buildUserPrompt(lines, lang){
 function parseJSONResponse(text, expectedCount){
     if(!text) return null;
     try {
-        // Strip potential markdown code fences
         let clean = text.replace(/```json/g, '').replace(/```/g, '').trim();
         const parsed = JSON.parse(clean);
         if (parsed.translations && Array.isArray(parsed.translations) && parsed.translations.length === expectedCount) {
