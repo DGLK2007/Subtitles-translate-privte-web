@@ -438,15 +438,15 @@ async function testConnection(){
     
     out.innerHTML = '<div class="status warn"><i class="fa-solid fa-spinner fa-spin"></i> Testing Gemini API...</div>';
     try{
-        const reply = await callGeminiAPI(apiKey, 'Reply with ONLY the word: Hello', 'Test', 0.2, 30);
-        out.innerHTML = `<div class="status ok"><i class="fa-solid fa-check"></i> Connected — "${reply.trim().slice(0,60)}"</div>`;
+        const reply = await callGeminiAPI(apiKey, 'Translate "Hello" to Sinhala. Reply ONLY with the JSON object.', 'Hello', 0.2, 100);
+        out.innerHTML = `<div class="status ok"><i class="fa-solid fa-check"></i> Connected — "${reply.slice(0,60)}"</div>`;
     }catch(e){
         out.innerHTML = `<div class="status err"><i class="fa-solid fa-xmark"></i> ${(e.message||'Failed').replace(/</g,'&lt;')}</div>`;
     }
 }
 
-/* ==================== GOOGLE GEMINI API CALL ==================== */
-const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent';
+/* ==================== GOOGLE GEMINI API CALL (JSON MODE) ==================== */
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
 async function callGeminiAPI(apiKey, systemPrompt, userPrompt, temperature, maxTokens){
     const body = {
@@ -454,12 +454,13 @@ async function callGeminiAPI(apiKey, systemPrompt, userPrompt, temperature, maxT
         systemInstruction: { parts: [{ text: systemPrompt }] },
         generationConfig: {
             temperature: temperature !== undefined ? temperature : 0.3,
-            maxOutputTokens: maxTokens || 4000
+            maxOutputTokens: maxTokens || 4000,
+            responseMimeType: "application/json" // Force JSON output to prevent empty responses
         }
     };
 
     const ctrl = new AbortController();
-    const timeout = setTimeout(()=>ctrl.abort(), 45000); // 45s timeout
+    const timeout = setTimeout(()=>ctrl.abort(), 45000);
 
     try {
         const resp = await fetch(GEMINI_URL, {
@@ -485,8 +486,21 @@ async function callGeminiAPI(apiKey, systemPrompt, userPrompt, temperature, maxT
         }
 
         const data = await resp.json();
-        const txt = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if(!txt) throw new Error('Empty response from Gemini');
+        
+        // Debugging: Log full response if empty
+        if (!data.candidates || data.candidates.length === 0) {
+            console.error("Full API Response:", data);
+            if (data.promptFeedback && data.promptFeedback.blockReason) {
+                throw new Error("Safety Filter Blocked: " + data.promptFeedback.blockReason);
+            }
+            throw new Error('Empty candidates array. Check console for details.');
+        }
+
+        const txt = data.candidates[0]?.content?.parts?.[0]?.text;
+        if(!txt) {
+            console.error("Empty text in candidate:", data.candidates[0]);
+            throw new Error('Empty response text from Gemini.');
+        }
         return txt;
 
     } catch(err) {
@@ -500,38 +514,32 @@ function buildSystemPrompt(lang){
     if(lang === 'si'){
         return `You translate English subtitle lines into NATURAL SPOKEN SINHALA (කතා කරන සිංහල).
 STYLE RULES: USE colloquial verbs (කළා, ගියා, ඉන්නවා, කියනවා, හිටියා, වුණා, තියෙනවා, පුළුවන්, ඕනේ, නැහැ). AVOID formal (කළේය, ගියේය, සිටී, කියයි, විය, වේ, ඇත, හැකිය, නැත). USE spoken connectors (හින්දා, විදියට, දිහා, විතරයි, ඕනේ).
-OUTPUT STRICT: Return ONLY numbered lines "1. text", exact same count, pure Sinhala script, no explanations.`;
+OUTPUT STRICT: Return a JSON object with a single key "translations" containing an array of strings. The array length must exactly match the input.`;
     }
-    if(lang === 'si_formal') return `Translate to formal Sinhala. Return ONLY numbered lines "1. text".`;
-    if(lang === 'en') return `Translate to English. Return ONLY numbered lines "1. text".`;
-    if(lang === 'ta') return `Translate to natural Tamil. Return ONLY numbered lines "1. text".`;
-    return `Translate. Return ONLY numbered lines "1. text".`;
+    if(lang === 'si_formal') return `Translate to formal Sinhala. Return JSON: {"translations": ["..."]}.`;
+    if(lang === 'en') return `Translate to English. Return JSON: {"translations": ["..."]}.`;
+    if(lang === 'ta') return `Translate to natural Tamil. Return JSON: {"translations": ["..."]}.`;
+    return `Translate. Return JSON: {"translations": ["..."]}.`;
 }
 
 function buildUserPrompt(lines, lang){
     const name = { si:'natural spoken Sinhala', si_formal:'formal Sinhala', en:'English', ta:'Tamil' }[lang] || 'target language';
-    return `Translate each line to ${name}. Return ONLY numbered lines. Do not skip.\n\n${lines.map((l,i)=>`${i+1}. ${l}`).join('\n')}`;
+    return `Translate each line to ${name}. Return ONLY a JSON object with key "translations" containing the array.\n\n${JSON.stringify(lines)}`;
 }
 
-function parseNumberedResponse(text, expectedCount){
+function parseJSONResponse(text, expectedCount){
     if(!text) return null;
-    text = text.replace(/```[a-z]*\n?/gi,'').replace(/```/g,'');
-    const result = new Array(expectedCount).fill(null);
-    let curIdx = -1, buf = [];
-
-    for(const raw of text.split('\n')){
-        const line = raw.trim();
-        if(!line) continue;
-        const m = line.match(/^(\d+)\s*[\.\)\:]\s*(.*)$/);
-        if(m){
-            if(curIdx >= 0 && curIdx < expectedCount && buf.length) result[curIdx] = buf.join(' ').trim();
-            const n = parseInt(m[1],10);
-            if(n >= 1 && n <= expectedCount){ curIdx = n-1; buf = [m[2]]; } else curIdx = -1;
-        } else if(curIdx >= 0){ buf.push(line); }
+    try {
+        // Strip potential markdown code fences
+        let clean = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        const parsed = JSON.parse(clean);
+        if (parsed.translations && Array.isArray(parsed.translations) && parsed.translations.length === expectedCount) {
+            return parsed.translations;
+        }
+        console.warn("JSON parsed but length mismatch or missing key:", parsed);
+    } catch (e) {
+        console.error("JSON Parse Error:", e, "Raw text:", text);
     }
-    if(curIdx >= 0 && curIdx < expectedCount && buf.length) result[curIdx] = buf.join(' ').trim();
-
-    if(result.every(r=>typeof r === 'string' && r.length > 0)) return result;
     return null;
 }
 
@@ -722,10 +730,10 @@ async function startTranslation(){
         async function translateBatch(texts){
             try {
                 const resp = await callGeminiAPI(apiKey, systemPrompt, buildUserPrompt(texts, targetLang), 0.3, 4000);
-                const parsed = parseNumberedResponse(resp, texts.length);
+                const parsed = parseJSONResponse(resp, texts.length);
                 if(parsed) return parsed;
             } catch(e) {
-                if (e.message.includes('API Error') || e.message.includes('Rate Limit') || e.message.includes('Forbidden')) {
+                if (e.message.includes('API Error') || e.message.includes('Rate Limit') || e.message.includes('Forbidden') || e.message.includes('Safety')) {
                     throw e; 
                 }
                 console.warn('Parsing failed, splitting:', e.message);
@@ -733,8 +741,8 @@ async function startTranslation(){
 
             if(texts.length === 1){
                 try {
-                    const resp = await callGeminiAPI(apiKey, buildSystemPrompt(targetLang) + '\nReturn ONLY the translation.', texts[0], 0.3, 300);
-                    const clean = (resp||'').trim().replace(/^\d+[\.\)]\s*/,'').replace(/^"|"$/g,'');
+                    const resp = await callGeminiAPI(apiKey, buildSystemPrompt(targetLang) + '\nReturn ONLY the translation text.', texts[0], 0.3, 300);
+                    const clean = (resp||'').trim().replace(/^"|"$/g,'');
                     if(clean) return [clean];
                 } catch(e) { 
                     if (e.message.includes('API Error') || e.message.includes('Rate Limit')) throw e;
